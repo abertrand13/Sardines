@@ -16,36 +16,33 @@ import android.widget.EditText;
 public class JoinGame extends Activity {
 
 	Button enterGameBtn;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_join_game);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
+
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
 		enterGameBtn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				enterGameBtnOnClick(v);
 			}
 		});
 	}
-	
+
 	private void enterGameBtnOnClick(View v){
 		Intent i = new Intent(this, Seeker.class);
-		
+
 		/* Verify that entered code exists in database */
-		
+
 		EditText text = (EditText) v;
 		int inputCode = Integer.parseInt(text.getText().toString());
-		
-		
-		
-		
 		startActivity(i);
+
 	}
 
 	/**
