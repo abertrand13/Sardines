@@ -1,14 +1,10 @@
 package com.lahacks.sardines;
 
+import java.util.ArrayList;
 import java.util.Locale;
-
-import com.lahacks.sardines.Seeker.DummySectionFragment;
-import com.lahacks.sardines.Seeker.NavigationFragment;
-import com.lahacks.sardines.Seeker.StreamFragment;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,14 +12,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.lahacks.sardines.Seeker.DummySectionFragment;
+import com.lahacks.sardines.Seeker.NavigationFragment;
+import com.lahacks.sardines.Seeker.StreamFragment;
 
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
@@ -140,8 +141,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		@Override
 		public Fragment getItem(int position) {
 			Fragment f;
-			
-			switch(position){
+
+			switch (position) {
 			case 1:
 				f = new StreamFragment();
 				break;
@@ -169,7 +170,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section_navigation).toUpperCase(l);
+				return getString(R.string.title_section_navigation)
+						.toUpperCase(l);
 			case 1:
 				return getString(R.string.title_section_stream).toUpperCase(l);
 			case 2:
@@ -178,12 +180,14 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			return null;
 		}
 	}
-	
-	public static class NavigationHiderFragment extends NavigationFragment{
+
+	public static class NavigationHiderFragment extends NavigationFragment {
 		// TODO
 	}
-	
+
 	public static class PlayersFragment extends Fragment {
+
+		ListView playersList;
 
 		public PlayersFragment() {
 		}
@@ -193,6 +197,27 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_hider_players,
 					container, false);
+			playersList = (ListView) rootView.findViewById(R.id.playersListView);
+			
+			String[] names = new String[]{"Player 1", "Player 2", "Player 3"};
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
+		              android.R.layout.simple_list_item_checked, android.R.id.text1, names);
+			
+			// Assign adapter to ListView
+            playersList.setAdapter(adapter); 
+            
+            // ListView Item Click Listener
+            playersList.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
 			return rootView;
 		}
 	}
