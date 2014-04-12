@@ -26,9 +26,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="58dp"
         android:ems="10"
-        android:textColorHint="@color/white" >
-
-        <requestFocus />
+        android:textColorHint="@color/white"
+		android:textColor="@color/white" >
+        <requestFocus /> 
     </EditText>
 
 </RelativeLayout>
