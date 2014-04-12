@@ -1,5 +1,6 @@
 package com.lahacks.sardines;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -11,13 +12,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.lahacks.sardines.Seeker.DummySectionFragment;
+import com.lahacks.sardines.Seeker.NavigationFragment;
+import com.lahacks.sardines.Seeker.StreamFragment;
 
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
@@ -133,14 +140,23 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
+			Fragment f;
+
+			switch (position) {
+			case 1:
+				f = new StreamFragment();
+				break;
+			case 2:
+				f = new PlayersFragment();
+				break;
+			default:
+				f = new NavigationHiderFragment();
+				break;
+			}
 			Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
-			return fragment;
+			f.setArguments(args);
+			return f;
 		}
 
 		@Override
@@ -154,39 +170,54 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
+				return getString(R.string.title_section_navigation)
+						.toUpperCase(l);
 			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
+				return getString(R.string.title_section_stream).toUpperCase(l);
 			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+				return getString(R.string.title_section_players).toUpperCase(l);
 			}
 			return null;
 		}
 	}
 
-	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		public static final String ARG_SECTION_NUMBER = "section_number";
+	public static class NavigationHiderFragment extends NavigationFragment {
+		// TODO
+	}
 
-		public DummySectionFragment() {
+	public static class PlayersFragment extends Fragment {
+
+		ListView playersList;
+
+		public PlayersFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_hider_dummy,
+			View rootView = inflater.inflate(R.layout.fragment_hider_players,
 					container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+			playersList = (ListView) rootView.findViewById(R.id.playersListView);
+			
+			String[] names = new String[]{"Player 1", "Player 2", "Player 3"};
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
+		              android.R.layout.simple_list_item_checked, android.R.id.text1, names);
+			
+			// Assign adapter to ListView
+            playersList.setAdapter(adapter); 
+            
+            // ListView Item Click Listener
+            playersList.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
 			return rootView;
 		}
 	}

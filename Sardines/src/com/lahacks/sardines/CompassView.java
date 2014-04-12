@@ -1,5 +1,7 @@
 package com.lahacks.sardines;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,10 +19,28 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 	private Context context;
 	private CompassViewThread thread;
 	
+	/*
+	 * This View has two possible modes. One for seeking and one for hiding.
+	 * Use setSeeking(true) for seeking mode.
+	 * Use setSeeking(false) for hiding mode.
+	 * 
+	 * In Seeking mode:
+	 *   call setAngleTarget(angle, degree range)
+	 * 
+	 * In hiding mode:
+	 *   call setSeekerAngles(ArrayList<int> angles)
+	 */
+	
+	private boolean inSeekMode = true;
+	
+	// Seek Mode
 	private double angle = 350;
 	private double arcRange = 10;
 	private double targetAngle = 190;
 	private double targetArcRange = 60;
+	
+	// Hide Mode
+	private ArrayList<Integer> angles = new ArrayList<Integer>();
 
 	public CompassView(Context context) {
 		super(context);
@@ -39,6 +59,10 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 		super(context, attrs, defStyle);
 		this.context = context;
 		setup();
+	}
+	
+	public void setSeeking(boolean isSeeking){
+		inSeekMode = isSeeking;
 	}
 
 	private void setup() {
@@ -74,11 +98,14 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		draw(canvas, (int)angle, (int)arcRange);
+		if(inSeekMode)
+			drawSeeking(canvas, (int)angle, (int)arcRange);
+		else
+			drawHiding(canvas);
 	}
 
-	private void draw(Canvas canvas, int angle, int arcRange) {
-		Log.v(LOG_TAG, "ANG: " + angle + " \tRNG: " + arcRange);
+	private void drawSeeking(Canvas canvas, int angle, int arcRange) {
+		//Log.v(LOG_TAG, "ANG: " + angle + " \tRNG: " + arcRange);
 		int x = getWidth();
 		int y = getHeight();
 		int r = Math.min(x, y);
@@ -89,6 +116,18 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 		if (drawAngle < 0)
 			drawAngle += 360;
 		canvas.drawArc(new RectF(0, 0, r, r), drawAngle, arcRange, true, paint);
+	}
+	
+	private void drawHiding(Canvas canvas){
+		int x = getWidth();
+		int y = getHeight();
+		int r = Math.min(x, y);
+		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(Color.argb(150, 150, 150, 150));
+		for(Integer ang : angles){
+			canvas.drawArc(new RectF(0,0,r,r), ang-10, 20, true, paint);
+		}
 	}
 
 	@Override
