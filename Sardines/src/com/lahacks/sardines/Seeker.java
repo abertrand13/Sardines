@@ -276,7 +276,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			}
 			
 			// Connect to firebase
-			String gameCode = "testGameCode"; // TODO
+			/*String gameCode = "testGameCode"; // TODO
 			//set up database reference
 			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 			Firebase GameRef = database.child(gameCode);
@@ -317,7 +317,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			Location l = new Location("");
 			l.setLatitude(latitude);
 			l.setLongitude(longitude);
-			updateHideLocation(l, currentLocation);
+			updateHideLocation(l, currentLocation);*/
 		}
 		
 		@Override 

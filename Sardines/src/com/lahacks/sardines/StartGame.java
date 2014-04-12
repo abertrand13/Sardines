@@ -27,8 +27,8 @@ public class StartGame extends Activity {
 		// Show the Up button in the action bar.
 		
 		//set up database for game
-		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
-		database.setValue(randomCode);
+		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+		database.child("GAME ID " + randomCode).setValue(randomCode);
 		
 		
 		setupActionBar();
