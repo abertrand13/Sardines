@@ -296,6 +296,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				public void onDataChange(DataSnapshot snap) {
 					//fuckery.
 					latitude = Double.parseDouble(snap.getValue().toString());
+					updateHideLocation();
 				}
 				
 				@Override
@@ -309,6 +310,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				public void onDataChange(DataSnapshot snap) {
 					//more fuckery.
 					longitude = Double.parseDouble(snap.getValue().toString());
+					updateHideLocation();
 				}
 				
 				@Override
@@ -318,11 +320,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			});
 			
 			
-			// Set up a data change listener, when you get a new location, so this:
-			Location l = new Location("");
-			l.setLatitude(latitude);
-			l.setLongitude(longitude);
-			updateHideLocation(l, currentLocation);
 		}
 		
 		@Override 
@@ -333,8 +330,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			
 		}
 		
-		private void updateHideLocation(Location hideLocation, Location currentLocation){
-			double angle = currentLocation.bearingTo(hideLocation);
+		private void updateHideLocation(){
+			Location l = new Location("");
+			l.setLatitude(latitude);
+			l.setLongitude(longitude);
+			double angle = currentLocation.bearingTo(l);
 			compass.setAngleTarget(angle, 30);
 		
 		}
@@ -351,9 +351,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-				Log.v(LOG_TAG, "Compass: " + event.values[1]);
-			}
+			
 			
 		}
 		
