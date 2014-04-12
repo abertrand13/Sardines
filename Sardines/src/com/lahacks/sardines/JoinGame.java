@@ -62,7 +62,6 @@ public class JoinGame extends Activity {
 				System.out.println("error:" + error);
 			}
 		});
-		
 		startActivity(i);
 
 	}
