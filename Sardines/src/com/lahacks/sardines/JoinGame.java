@@ -30,6 +30,7 @@ public class JoinGame extends Activity {
 	//Intent to start the seeker.
 	Intent i;
 	String playerName;
+	ValueEventListener listener;
 	
 	
 
@@ -74,7 +75,8 @@ public class JoinGame extends Activity {
 		
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 		//database.child("GAME ID " + inputCode).setValue("hey there");
-		database.addValueEventListener(new ValueEventListener() {
+		
+		listener = database.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot data) {
 				//System.out.println(data.getName());
@@ -82,6 +84,7 @@ public class JoinGame extends Activity {
 				//pesky async...
 				gameExists = data.hasChild("GAME ID " + inputCode);
 				if(gameExists) {
+					
 					addPlayerToDatabase();
 					//add this player to the database
 					/*Firebase newPlayerRef = database.child("GAME ID" + inputCode).child("players").push();
@@ -116,7 +119,8 @@ public class JoinGame extends Activity {
 	
 	private void addPlayerToDatabase() {
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
-		Firebase newPlayerRef = database.child("GAME ID" + inputCode).child("players").push();
+		database.removeEventListener(listener);
+		Firebase newPlayerRef = database.child("GAME ID " + inputCode).child("players").push();
 		newPlayerRef.child("id").setValue(newPlayerRef.getName());
 		newPlayerRef.child("name").setValue(playerName);
 		newPlayerRef.child("latitude").setValue(0);
