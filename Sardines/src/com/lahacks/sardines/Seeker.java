@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.firebase.client.*;
+
 public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 	private final static String LOG_TAG = "Seeker";
@@ -257,6 +259,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			return rootView;
 		}
 		
+		double latitude;
+		double longitude;
+		
 		@Override
 		public void onResume(){
 			super.onResume();
@@ -271,12 +276,47 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			}
 			
 			// Connect to firebase
-			int gameCode = 1234; // TODO
+			String gameCode = "testGameCode"; // TODO
+			//set up database reference
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase GameRef = database.child(gameCode);
+			Firebase hideOutLatitude = GameRef.child("hideout").child("latitude");
+			Firebase hideOutLongitude = GameRef.child("hideout").child("longitude");
+			
+			
+			
+			//async calls to get hideout's location
+			hideOutLatitude.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					//fuckery.
+					latitude = Double.parseDouble(snap.getValue().toString());
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError error) {
+					System.out.println("error:" + error);
+				}
+			});
+			
+			hideOutLongitude.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					//more fuckery.
+					longitude = Double.parseDouble(snap.getValue().toString());
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError error) {
+					System.out.println("error:" + error);
+				}
+			});
+			
 			
 			// Set up a data change listener, when you get a new location, so this:
 			Location l = new Location("");
-			l.setLatitude(10.5);
-			l.setLongitude(12.5);
+			l.setLatitude(latitude);
+			l.setLongitude(longitude);
 			updateHideLocation(l, currentLocation);
 		}
 		
