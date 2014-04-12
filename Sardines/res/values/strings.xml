@@ -15,5 +15,9 @@
 
     <string name="title_activity_hider">Hider</string>
     <string name="title_section3">Section 3</string>
+    
+    <string name="title_section_navigation">Navigation</string>
+    <string name="title_section_stream">Stream</string>
+    <string name="title_section_players">Players</string>
 
 </resources>
