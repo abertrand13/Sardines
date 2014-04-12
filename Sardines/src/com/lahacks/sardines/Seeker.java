@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Seeker extends FragmentActivity implements ActionBar.TabListener, SensorEventListener {
+public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 	private final static String LOG_TAG = "Seeker";
 	
@@ -46,22 +46,12 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 	 */
 	ViewPager mViewPager;
 	
-	LocationManager locationManager;
-	SensorManager sensorManager;
-	
-	Location currentLocation = new Location("");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seeker);
-		
-		// GPS 
-		// Acquire a reference to the system Location Manager
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		
-		// COMPASS
-		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -100,30 +90,20 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 					.setTabListener(this));
 		}
 		
-		// Connect to firebase
-		int gameCode = 1234; // TODO
+		
 		
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Register the listener with the Location Manager to receive location updates
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-		// Register for compass updates
-		if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
-			sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
-		} else {
-			// Failure! No magnetometer.
-			Log.e(LOG_TAG, "No magnetomter found...");
-		}
+		
+		
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-		sensorManager.unregisterListener(this);
-		locationManager.removeUpdates(locationListener);
 	}
 
 	@Override
@@ -247,8 +227,16 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 		}
 	}
 	
-	public static class NavigationFragment extends Fragment {
+	public static class NavigationFragment extends Fragment implements SensorEventListener{
 
+		CompassView compass;
+		
+
+		LocationManager locationManager;
+		SensorManager sensorManager;
+		
+		Location currentLocation = new Location("");
+		
 		public NavigationFragment() {
 		}
 
@@ -257,7 +245,93 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_seeker_navigation,
 					container, false);
+			compass = (CompassView) rootView.findViewById(R.id.compassView1);
+			
+			// GPS 
+			// Acquire a reference to the system Location Manager
+			locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+			
+			// COMPASS
+			sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+			
 			return rootView;
+		}
+		
+		@Override
+		public void onResume(){
+			super.onResume();
+			// Register the listener with the Location Manager to receive location updates
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+			// Register for compass updates
+			if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+				sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+			} else {
+				// Failure! No magnetometer.
+				Log.e(LOG_TAG, "No magnetomter found...");
+			}
+			
+			// Connect to firebase
+			int gameCode = 1234; // TODO
+			
+			// Set up a data change listener, when you get a new location, so this:
+			Location l = new Location("");
+			l.setLatitude(10.5);
+			l.setLongitude(12.5);
+			updateHideLocation(l, currentLocation);
+		}
+		
+		@Override 
+		public void onPause(){
+			super.onPause();
+			locationManager.removeUpdates(locationListener);
+			
+			
+		}
+		
+		private void updateHideLocation(Location hideLocation, Location currentLocation){
+			double angle = currentLocation.bearingTo(hideLocation);
+			compass.setAngleTarget(angle, 30);
+		
+		}
+		
+		/*
+		 * COMPASS
+		 */
+		
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+				Log.v(LOG_TAG, "Compass: " + event.values[1]);
+			}
+			
+		}
+		
+		/*
+		 * GPS
+		 */
+
+		// Define a listener that responds to location updates
+		LocationListener locationListener = new LocationListener() {
+		    public void onLocationChanged(Location location) {
+		      // Called when a new location is found by the network location provider.
+		      locationUpdate(location);
+		    }
+
+		    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+		    public void onProviderEnabled(String provider) {}
+
+		    public void onProviderDisabled(String provider) {}
+		  };
+		  
+		private void locationUpdate(Location l){
+			Log.v(LOG_TAG, "New Location: "+l); // TODO
 		}
 	}
 	
@@ -275,49 +349,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 		}
 	}
 
-	/*
-	 * COMPASS
-	 */
 	
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-			Log.v(LOG_TAG, "Compass: " + event.values[1]);
-		}
-		
-	}
-	
-	/*
-	 * GPS
-	 */
-
-	// Define a listener that responds to location updates
-	LocationListener locationListener = new LocationListener() {
-	    public void onLocationChanged(Location location) {
-	      // Called when a new location is found by the network location provider.
-	      locationUpdate(location);
-	    }
-
-	    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-	    public void onProviderEnabled(String provider) {}
-
-	    public void onProviderDisabled(String provider) {}
-	  };
-	  
-	private void locationUpdate(Location l){
-		Log.v(LOG_TAG, "New Location: "+l); // TODO
-	}
-	
-	private void updateHideLocation(Location loc){
-		currentLocation.bearingTo(loc);
-	
-	}
 
 }
