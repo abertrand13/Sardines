@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class JoinGame extends Activity {
 
@@ -35,6 +36,15 @@ public class JoinGame extends Activity {
 	
 	private void enterGameBtnOnClick(View v){
 		Intent i = new Intent(this, Seeker.class);
+		
+		/* Verify that entered code exists in database */
+		
+		EditText text = (EditText) v;
+		int inputCode = Integer.parseInt(text.getText().toString());
+		
+		
+		
+		
 		startActivity(i);
 	}
 
