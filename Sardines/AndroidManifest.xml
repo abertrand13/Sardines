@@ -16,6 +16,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+ 
+              
         <activity
             android:name="com.lahacks.sardines.Splash"
             android:label="@string/app_name" >
@@ -36,6 +38,7 @@
         <activity
             android:name="com.lahacks.sardines.StartGame"
             android:label="@string/title_activity_start_game"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
