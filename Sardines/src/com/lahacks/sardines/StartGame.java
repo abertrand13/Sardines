@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -12,9 +13,12 @@ import android.os.Build;
 import com.firebase.client.*;
 
 public class StartGame extends Activity {
+	
+	public int connectedFriends;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		connectedFriends = 0;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_game);
 		// Get random game code
@@ -29,6 +33,17 @@ public class StartGame extends Activity {
 		//set up database for game
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 		database.child("GAME ID " + randomCode).setValue(randomCode);
+		
+		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
+		for(int j = 0; j < 101 ; j++) {
+			progress.setProgress(j);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		
 		setupActionBar();
@@ -49,6 +64,18 @@ public class StartGame extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.start_game, menu);
 		return true;
+	}
+	
+	public void onConnected() {
+		connectedFriends++;
+		TextView view = (TextView) findViewById(R.id.friendsConnected);
+		view.setText(Integer.toString(connectedFriends) + "friends have entered the room");
+	}
+	
+	public void onDisconnect() {
+		connectedFriends--;
+		TextView view = (TextView) findViewById(R.id.friendsConnected);
+		view.setText(Integer.toString(connectedFriends) + "friends have entered the room");
 	}
 
 	@Override
