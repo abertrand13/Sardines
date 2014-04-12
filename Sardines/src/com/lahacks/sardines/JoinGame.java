@@ -49,11 +49,11 @@ public class JoinGame extends Activity {
 		//int inputCode = Integer.parseInt(text.getText().toString());
 		inputCode = text.getText().toString();
 		
-		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
+		/*Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
 		database.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot data) {
-				gameExists = data.hasChild((String)inputCode);
+				gameExists = data.hasChild("GAME ID " + (String)inputCode);
 				System.out.println(gameExists);
 			}
 			
@@ -62,7 +62,13 @@ public class JoinGame extends Activity {
 				System.out.println("error:" + error);
 			}
 		});
-		startActivity(i);
+		if(gameExists) {
+			startActivity(i);	
+		}
+		else
+		{
+			System.out.println("Game doesn't exist!");
+		}*/
 
 	}
 
