@@ -12,15 +12,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.util.Log;
+
 import com.firebase.client.*;
 
 public class JoinGame extends Activity {
 
-	Button enterGameBtn;
+	private final static String LOG_TAG = "JoinGame";
 	
-	//globabl variables are bad?
+	Button enterGameBtn;
+	EditText enterGameTxt;
+	
+	//global variables are bad?
 	boolean gameExists = false;
 	String inputCode;
+	
+	//Intent to start the seeker.
+	Intent i;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +39,9 @@ public class JoinGame extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		enterGameTxt = (EditText) findViewById(R.id.enterGameTxt);
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
+		Log.v(LOG_TAG, "setting things up.");
 		enterGameBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -40,29 +52,40 @@ public class JoinGame extends Activity {
 	}
 
 	private void enterGameBtnOnClick(View v){
-		Intent i = new Intent(this, Seeker.class);
-
+		//Intent i = new Intent(this, Seeker.class);
+		i = new Intent(this, Seeker.class);
+		
 		/* Verify that entered code exists in database */
 		
 
-		EditText text = (EditText) v;
+		EditText text = (EditText) enterGameTxt;
 		//int inputCode = Integer.parseInt(text.getText().toString());
 		inputCode = text.getText().toString();
 		
-		/*Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
+		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+		//database.child("GAME ID " + inputCode).setValue("hey there");
 		database.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot data) {
-				gameExists = data.hasChild("GAME ID " + (String)inputCode);
-				System.out.println(gameExists);
+				//System.out.println(data.getName());
+				
+				//pesky async...
+				gameExists = data.hasChild("GAME ID " + inputCode);
+				if(gameExists) {
+				startActivity(i);	
+				}
+				else
+				{
+					System.out.println("Game doesn't exist!");
+				}
 			}
 			
 			@Override
 			public void onCancelled(FirebaseError error) {
-				System.out.println("error:" + error);
+				System.out.println("error: " + error);
 			}
 		});
-		if(gameExists) {
+		/*if(gameExists) {
 			startActivity(i);	
 		}
 		else
