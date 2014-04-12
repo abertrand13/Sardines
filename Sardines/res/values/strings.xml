@@ -9,6 +9,11 @@
     <string name="title_activity_seeker">Seeker</string>
     <string name="title_section1">Navigation</string>
     <string name="title_section2">Stream</string>
-	<color name="black">#000000</color>
-	<color name="white">#FFFFFF</color>    
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <string name="title_activity_hider">Hider</string>
+    <string name="title_section3">Section 3</string>
+
 </resources>

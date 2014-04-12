@@ -4,14 +4,6 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,7 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,10 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Seeker extends FragmentActivity implements ActionBar.TabListener, SensorEventListener {
+public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
-	private final static String LOG_TAG = "Seeker";
-	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -45,21 +35,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-	
-	LocationManager locationManager;
-	SensorManager sensorManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_seeker);
-		
-		// GPS 
-		// Acquire a reference to the system Location Manager
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		
-		// COMPASS
-		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		setContentView(R.layout.activity_hider);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -98,32 +78,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 					.setTabListener(this));
 		}
 	}
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		// Register the listener with the Location Manager to receive location updates
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-		// Register for compass updates
-		if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
-			sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
-		} else {
-			// Failure! No magnetometer.
-			Log.e(LOG_TAG, "No magnetomter found...");
-		}
-	}
-	
-	@Override
-	public void onPause(){
-		super.onPause();
-		sensorManager.unregisterListener(this);
-		locationManager.removeUpdates(locationListener);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.seeker, menu);
+		getMenuInflater().inflate(R.menu.hider, menu);
 		return true;
 	}
 
@@ -174,31 +133,20 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 
 		@Override
 		public Fragment getItem(int position) {
-			Fragment f;
-			
-			Log.v(LOG_TAG, "Position: " + position);
-			
-			switch(position){
-			case 0:
-				f = new NavigationFragment();
-				break;
-			case 1:
-				f = new StreamFragment();
-				break;
-			default:
-				f = new DummySectionFragment();
-				break;
-			}
+			// getItem is called to instantiate the fragment for the given page.
+			// Return a DummySectionFragment (defined as a static inner class
+			// below) with the page number as its lone argument.
+			Fragment fragment = new DummySectionFragment();
 			Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			f.setArguments(args);
-			return f;
+			fragment.setArguments(args);
+			return fragment;
 		}
 
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -209,6 +157,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 				return getString(R.string.title_section1).toUpperCase(l);
 			case 1:
 				return getString(R.string.title_section2).toUpperCase(l);
+			case 2:
+				return getString(R.string.title_section3).toUpperCase(l);
 			}
 			return null;
 		}
@@ -231,7 +181,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_seeker_dummy,
+			View rootView = inflater.inflate(R.layout.fragment_hider_dummy,
 					container, false);
 			TextView dummyTextView = (TextView) rootView
 					.findViewById(R.id.section_label);
@@ -239,74 +189,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
-	}
-	
-	public static class NavigationFragment extends Fragment {
-
-		public NavigationFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_seeker_navigation,
-					container, false);
-			return rootView;
-		}
-	}
-	
-	public static class StreamFragment extends Fragment {
-
-		public StreamFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
-					container, false);
-			return rootView;
-		}
-	}
-
-	/*
-	 * COMPASS
-	 */
-	
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-			Log.v(LOG_TAG, "Compass: " + event.values[1]);
-		}
-		
-	}
-	
-	/*
-	 * GPS
-	 */
-
-	// Define a listener that responds to location updates
-	LocationListener locationListener = new LocationListener() {
-	    public void onLocationChanged(Location location) {
-	      // Called when a new location is found by the network location provider.
-	      locationUpdate(location);
-	    }
-
-	    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-	    public void onProviderEnabled(String provider) {}
-
-	    public void onProviderDisabled(String provider) {}
-	  };
-	  
-	private void locationUpdate(Location l){
-		Log.v(LOG_TAG, "New Location: "+l); // TODO
 	}
 
 }
