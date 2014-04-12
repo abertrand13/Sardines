@@ -38,7 +38,7 @@ import com.lahacks.sardines.Seeker.StreamFragment;
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 	public static final String LOG_TAG = "Hider";
-	
+
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -192,109 +192,160 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		}
 	}
 
-	public static class NavigationHiderFragment extends Fragment implements SensorEventListener{
+	public static class NavigationHiderFragment extends Fragment implements
+			SensorEventListener {
 
 		CompassView compass;
-		
 
 		LocationManager locationManager;
 		SensorManager sensorManager;
-		
+
 		Location currentLocation = new Location("");
-		
+
+		ArrayList<Integer> angles;
+
+		private float[] mMagneticValues;
+		private float[] mAccelerometerValues;
+
+		private float mAzimuth = 0;
+		private float mPitch = 0;
+		private float mRoll = 0;
+
 		public NavigationHiderFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_hider_navigation,
-					container, false);
+			View rootView = inflater.inflate(
+					R.layout.fragment_hider_navigation, container, false);
 			compass = (CompassView) rootView.findViewById(R.id.compassView1);
-			
-			// GPS 
+			compass.setSeeking(false);
+
+			angles = new ArrayList<Integer>();
+			angles.add(0);
+			// angles.add(30);
+
+			compass.setSeekerAngles(angles);
+
+			// GPS
 			// Acquire a reference to the system Location Manager
-			locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-			
+			locationManager = (LocationManager) getActivity().getSystemService(
+					Context.LOCATION_SERVICE);
+
 			// COMPASS
-			sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-			
+			sensorManager = (SensorManager) getActivity().getSystemService(
+					Context.SENSOR_SERVICE);
+
 			return rootView;
 		}
-		
+
 		double latitude;
 		double longitude;
-		
+
 		@Override
-		public void onResume(){
+		public void onResume() {
 			super.onResume();
-			// Register the listener with the Location Manager to receive location updates
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+			// Register the listener with the Location Manager to receive
+			// location updates
+			locationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 			// Register for compass updates
-			if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
-				sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+			if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+				sensorManager.registerListener(this, sensorManager
+						.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+						SensorManager.SENSOR_DELAY_GAME);
+				sensorManager.registerListener(this, sensorManager
+						.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						SensorManager.SENSOR_DELAY_GAME);
 			} else {
 				// Failure! No magnetometer.
 				Log.e(LOG_TAG, "No magnetomter found...");
 			}
-			
+
 		}
-		
-		@Override 
-		public void onPause(){
+
+		@Override
+		public void onPause() {
 			super.onPause();
 			locationManager.removeUpdates(locationListener);
-			
-			
+
 		}
-		
-		private void updateHideLocation(Location hideLocation, Location currentLocation){
-			double angle = currentLocation.bearingTo(hideLocation);
-			compass.setAngleTarget(angle, 30);
-		
-		}
-		
+
 		/*
 		 * COMPASS
 		 */
-		
+
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-				Log.v(LOG_TAG, "Compass: " + event.values[1]);
+			synchronized (NavigationHiderFragment.this) {
+				switch (event.sensor.getType()) {
+				case Sensor.TYPE_MAGNETIC_FIELD:
+					mMagneticValues = event.values.clone();
+					break;
+				case Sensor.TYPE_ACCELEROMETER:
+					mAccelerometerValues = event.values.clone();
+					break;
+				}
+
+				if (mMagneticValues != null && mAccelerometerValues != null) {
+					float[] R = new float[16];
+					SensorManager.getRotationMatrix(R, null,
+							mAccelerometerValues, mMagneticValues);
+					float[] orientation = new float[3];
+					SensorManager.getOrientation(R, orientation);
+					mAzimuth = orientation[0];
+					mPitch = orientation[1];
+					mRoll = orientation[2];
+					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					
+					ArrayList<Integer> rotated = new ArrayList<Integer>();
+					for(int a : angles){
+						int r = (int)(a-(mAzimuth*(180.0/Math.PI)));
+						if(r < 0) r += 360;
+						if(r >= 360) r -= 360;
+						rotated.add(r);
+						Log.d(LOG_TAG, "r=" + r);
+					}
+					compass.setSeekerAngles(rotated);
+				}
 			}
-			
+
 		}
-		
+
 		/*
 		 * GPS
 		 */
 
 		// Define a listener that responds to location updates
 		LocationListener locationListener = new LocationListener() {
-		    public void onLocationChanged(Location location) {
-		      // Called when a new location is found by the network location provider.
-		      locationUpdate(location);
-		    }
+			public void onLocationChanged(Location location) {
+				// Called when a new location is found by the network location
+				// provider.
+				locationUpdate(location);
+			}
 
-		    public void onStatusChanged(String provider, int status, Bundle extras) {}
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+			}
 
-		    public void onProviderEnabled(String provider) {}
+			public void onProviderEnabled(String provider) {
+			}
 
-		    public void onProviderDisabled(String provider) {}
-		  };
-		  
-		private void locationUpdate(Location l){
-			Log.v(LOG_TAG, "New Location: "+l); // TODO
+			public void onProviderDisabled(String provider) {
+			}
+		};
+
+		private void locationUpdate(Location l) {
+			Log.v(LOG_TAG, "New Location: " + l); // TODO
 		}
 	}
-
 
 	public static class PlayersFragment extends Fragment {
 
@@ -308,29 +359,32 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_hider_players,
 					container, false);
-			playersList = (ListView) rootView.findViewById(R.id.playersListView);
-			
-			String[] names = new String[]{"Player 1", "Player 2", "Player 3"};
-			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
-		              android.R.layout.simple_list_item_checked, android.R.id.text1, names);
-			
+			playersList = (ListView) rootView
+					.findViewById(R.id.playersListView);
+
+			String[] names = new String[] { "Player 1", "Player 2", "Player 3" };
+
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+					this.getActivity(),
+					android.R.layout.simple_list_item_checked,
+					android.R.id.text1, names);
+
 			playersList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-			
+
 			// Assign adapter to ListView
-            playersList.setAdapter(adapter); 
-            
-            // ListView Item Click Listener
-            playersList.setOnItemClickListener(new OnItemClickListener() {
+			playersList.setAdapter(adapter);
+
+			// ListView Item Click Listener
+			playersList.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
-			
+
 			return rootView;
 		}
 	}

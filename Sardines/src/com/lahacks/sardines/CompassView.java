@@ -79,6 +79,10 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 		targetArcRange = range;
 	}
 	
+	public void setSeekerAngles(ArrayList<Integer> a){
+		angles = a;
+	}
+	
 	public double getAngle() {
 		return angle;
 	}
