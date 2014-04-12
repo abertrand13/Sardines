@@ -40,8 +40,18 @@ public class StartGame extends Activity {
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 		database.child("GAME ID " + randomCode).setValue(randomCode);
 		Firebase dataRef = database.child("GAME ID " + randomCode);
+		
+		//add hideout coordinates
 		dataRef.child("hideout").child("latitude").setValue(0);
 		dataRef.child("hideout").child("longitude").setValue(0);
+		
+		//set up player database
+		Firebase newPlayerRef = dataRef.child("players").push();
+		newPlayerRef.child("id").setValue(newPlayerRef.getName());
+		newPlayerRef.child("name").setValue("Alex");
+		newPlayerRef.child("latitude").setValue(0);
+		newPlayerRef.child("longitude").setValue(0);
+		newPlayerRef.child("state").setValue("hiding");
 		
 		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
 		for(int j = 0; j < 101 ; j++) {
