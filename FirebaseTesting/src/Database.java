@@ -32,35 +32,38 @@ public class Database {
 		Firebase game2Ref = database.child("Game ID R45THG8");
 		game2Ref.setValue("MOAR SHITZ");
 		
-		game2Ref.child("player1").setValue("Test.");
+		game2Ref.child("player1").setValue("Test."); //'folders' can't have values
 		game2Ref.child("player1").child("name").setValue("LIL JON");
 		game2Ref.child("player1").child("lat").setValue("2");
 		game2Ref.child("player1").child("long").setValue("3");
 		game2Ref.child("player1").child("ready").setValue("FUCK YEA");
 		
+		System.out.println(game2Ref.child("player1").getName());
+		System.out.println(game2Ref.child("player1").child("name"));
 		
 		//READING DATA (CONSTANTLY)
-		database.addValueEventListener(new ValueEventListener() {
+		/*database.addValueEventListener(new ValueEventListener() {
 
 		    @Override
 		    public void onDataChange(DataSnapshot snap) {
-		        System.out.println(snap.getName() + " -> " + snap.getValue());
+		        //System.out.println(snap.getName() + " -> " + snap.getValue());
+		    	//System.out.println("");
 		    }
 
 		    @Override
 		    public void onCancelled() {
 		    	System.out.println("Listener was cancelled");
 		    }
-		});
+		});*/
 		
-		database.addChildEventListener(new ChildEventListener() {
+		/*database.addChildEventListener(new ChildEventListener() {
 		    @Override
 		    public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
 		        //String userName = snapshot.getName();
 		        //GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
 		        //Map<String, Object> userData = snapshot.getValue(t);
 		        //System.out.println("User " + userName + " has entered the chat");
-		    	//System.out.println("woop woop!");
+		    	System.out.println("woop woop!");
 		    }
 
 		    @Override
@@ -82,8 +85,6 @@ public class Database {
 		    public void onCancelled() {
 
 		    }
-		});
-		
-		
+		});*/
 	}
 }
