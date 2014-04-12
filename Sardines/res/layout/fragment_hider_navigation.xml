@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#111111" >
-
-    <TextView
+    
+  <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,26 +15,6 @@
         android:minHeight="50dp"
         android:text="Latest Notification"
         android:textColor="#FFFFFF" />
-    
-
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignTop="@+id/textView3"
-        android:text="4"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignTop="@+id/textView5"
-        android:text="2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
   
     
@@ -102,7 +83,7 @@
         android:layout_alignBottom="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
         android:layout_marginLeft="10dp"
-        android:text="Seeking"
+        android:text="Hiding"
         android:textAppearance="@style/AppTheme"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -121,4 +102,4 @@
         android:textColor="#FFFFFF"
         android:textSize="24dp" />
 
-</RelativeLayout> <!-- android:textAppearance="?android:attr/textAppearanceLarge" -->
+</RelativeLayout>
