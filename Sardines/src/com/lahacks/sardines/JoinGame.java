@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.firebase.client.*;
 
@@ -30,6 +29,7 @@ public class JoinGame extends Activity {
 	
 	//Intent to start the seeker.
 	Intent i;
+	String playerName;
 	
 	
 
@@ -43,6 +43,15 @@ public class JoinGame extends Activity {
 		enterGameTxt = (EditText) findViewById(R.id.enterGameTxt);
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
 		Log.v(LOG_TAG, "setting things up.");
+		
+		//get name of player
+		playerName = "";
+		Bundle extras = getIntent().getExtras();
+		if(extras != null) {
+			playerName = (String)extras.get("name");
+			System.out.println(playerName);
+		}
+		
 		enterGameBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -73,7 +82,16 @@ public class JoinGame extends Activity {
 				//pesky async...
 				gameExists = data.hasChild("GAME ID " + inputCode);
 				if(gameExists) {
-				startActivity(i);	
+					addPlayerToDatabase();
+					//add this player to the database
+					/*Firebase newPlayerRef = database.child("GAME ID" + inputCode).child("players").push();
+					newPlayerRef.child("id").setValue(newPlayerRef.getName());
+					newPlayerRef.child("name").setValue(playerName);
+					newPlayerRef.child("latitude").setValue(0);
+					newPlayerRef.child("longitude").setValue(0);
+					newPlayerRef.child("state").setValue("hiding");*/
+					
+					startActivity(i);	
 				}
 				else
 				{
@@ -94,6 +112,16 @@ public class JoinGame extends Activity {
 			System.out.println("Game doesn't exist!");
 		}*/
 
+	}
+	
+	private void addPlayerToDatabase() {
+		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+		Firebase newPlayerRef = database.child("GAME ID" + inputCode).child("players").push();
+		newPlayerRef.child("id").setValue(newPlayerRef.getName());
+		newPlayerRef.child("name").setValue(playerName);
+		newPlayerRef.child("latitude").setValue(0);
+		newPlayerRef.child("longitude").setValue(0);
+		newPlayerRef.child("state").setValue("seeking");
 	}
 
 	/**
