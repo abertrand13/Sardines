@@ -27,6 +27,7 @@
         android:layout_marginTop="20dp"
         android:text="Code Here"
         android:textStyle = "bold"
+        android:textSize = "50sp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
@@ -39,5 +40,16 @@
         android:layout_marginLeft="20dp" >
         
     </ListView>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/codeText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:text="Share this code with your friends to play Sardines"
+        android:gravity ="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

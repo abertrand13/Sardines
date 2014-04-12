@@ -3,7 +3,9 @@ package com.lahacks.sardines;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -14,6 +16,13 @@ public class StartGame extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_game);
+		// Get random game code
+		int min = 1000;
+		int max = 9999;
+		int randomCode = min + (int)(Math.random() * ((max - min) + 1));
+		// Get code text from activity_start_game.xml and change it to the random code
+		TextView contentView = (TextView) findViewById(R.id.codeText);
+		contentView.setText(Integer.toString(randomCode));
 		// Show the Up button in the action bar.
 		setupActionBar();
 	}
