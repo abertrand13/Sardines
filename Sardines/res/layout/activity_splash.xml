@@ -11,20 +11,20 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-60dp"
+        android:layout_marginTop="-10dp"
         android:src="@drawable/fishy" />
 
     <Button
         android:id="@+id/joinGameBtn"
         android:layout_width="150dp"
         android:layout_height="65dp"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_above="@+id/startGameBtn"
+        android:layout_alignLeft="@+id/startGameBtn"
+        android:layout_marginBottom="19dp"
         android:background="@drawable/button"
         android:gravity="left|center_vertical"
         android:padding="10dp"
@@ -34,12 +34,27 @@
         android:id="@+id/startGameBtn"
         android:layout_width="150dp"
         android:layout_height="65dp"
-        android:layout_alignLeft="@+id/joinGameBtn"
-        android:layout_below="@+id/joinGameBtn"
-        android:layout_marginTop="17dp"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="19dp"
         android:background="@drawable/button"
         android:gravity="left|center_vertical"
         android:padding="10dp"
         android:text="Start a Game" />
+
+    <EditText
+        android:id="@+id/nameEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:ems="10"
+        android:hint="your name here"
+        android:inputType="textPersonName"
+        android:textColor="@color/white" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>
