@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
+import com.firebase.client.*;
 
 public class StartGame extends Activity {
 
@@ -24,6 +25,12 @@ public class StartGame extends Activity {
 		TextView contentView = (TextView) findViewById(R.id.codeText);
 		contentView.setText(Integer.toString(randomCode));
 		// Show the Up button in the action bar.
+		
+		//set up database for game
+		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
+		database.setValue(randomCode);
+		
+		
 		setupActionBar();
 	}
 
