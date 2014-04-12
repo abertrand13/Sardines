@@ -25,7 +25,8 @@
         android:layout_above="@+id/enterGameBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="58dp"
-        android:ems="10" >
+        android:ems="10"
+        android:textColorHint="@color/white" >
 
         <requestFocus />
     </EditText>
