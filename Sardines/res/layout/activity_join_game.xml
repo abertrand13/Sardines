@@ -9,15 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".JoinGame" >
 
-    <Button
-        android:id="@+id/enterGameBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="106dp"
-        android:text="Enter Game" />
-
     <EditText
         android:id="@+id/enterGameTxt"
         android:layout_width="wrap_content"
@@ -26,9 +17,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="58dp"
         android:ems="10"
-        android:textColorHint="@color/white"
-		android:textColor="@color/white" >
+        android:hint="Game code"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/grey" >
+
         <requestFocus /> 
     </EditText>
+
+    <Button
+        android:id="@+id/enterGameBtn"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="186dp"
+        android:background="@drawable/button"
+        android:gravity="left|center_vertical"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:text="Enter Game" />
 
 </RelativeLayout>
