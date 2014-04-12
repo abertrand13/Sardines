@@ -54,12 +54,14 @@ public class JoinGame extends Activity {
 
 	private void enterGameBtnOnClick(View v){
 		i = new Intent(this, Seeker.class);
+		
 		/* Verify that entered code exists in database */
 		
 
 		EditText text = (EditText) enterGameTxt;
 		//int inputCode = Integer.parseInt(text.getText().toString());
 		inputCode = text.getText().toString();
+		i.putExtra("gameCode", inputCode);
 		
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 		//database.child("GAME ID " + inputCode).setValue("hey there");
