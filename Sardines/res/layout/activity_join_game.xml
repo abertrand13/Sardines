@@ -35,4 +35,6 @@
         android:scaleType="fitCenter"
         android:text="Enter Game" />
 
+  
+
 </RelativeLayout>
