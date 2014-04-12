@@ -39,8 +39,8 @@ public class JoinGame extends Activity {
 
 		/* Verify that entered code exists in database */
 
-		EditText text = (EditText) v;
-		int inputCode = Integer.parseInt(text.getText().toString());
+//		EditText text = (EditText) v;
+//		int inputCode = Integer.parseInt(text.getText().toString());
 		startActivity(i);
 
 	}
