@@ -133,6 +133,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 
 		@Override
 		public Fragment getItem(int position) {
+			//switch(position){
+			//case 0:
+			//}
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
@@ -185,6 +188,34 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 					.findViewById(R.id.section_label);
 			dummyTextView.setText(Integer.toString(getArguments().getInt(
 					ARG_SECTION_NUMBER)));
+			return rootView;
+		}
+	}
+	
+	public static class NavigationFragment extends Fragment {
+
+		public NavigationFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_seeker_navigation,
+					container, false);
+			return rootView;
+		}
+	}
+	
+	public static class StreamFragment extends Fragment {
+
+		public StreamFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
+					container, false);
 			return rootView;
 		}
 	}
