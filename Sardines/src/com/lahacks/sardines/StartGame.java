@@ -1,20 +1,26 @@
 package com.lahacks.sardines;
 
-import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
-import android.view.View;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
-import com.firebase.client.*;
+
+import com.firebase.client.Firebase;
 
 public class StartGame extends Activity {
 	
 	public int connectedFriends;
+	
+	TextView contentView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +32,7 @@ public class StartGame extends Activity {
 		int max = 9999;
 		int randomCode = min + (int)(Math.random() * ((max - min) + 1));
 		// Get code text from activity_start_game.xml and change it to the random code
-		TextView contentView = (TextView) findViewById(R.id.codeText);
+		contentView = (TextView) findViewById(R.id.codeText);
 		contentView.setText(Integer.toString(randomCode));
 		// Show the Up button in the action bar.
 		
@@ -47,6 +53,17 @@ public class StartGame extends Activity {
 		
 		
 		setupActionBar();
+		
+		Button beginGameBtn = (Button) findViewById(R.id.beginGameBtn);
+		beginGameBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getApplicationContext(), Hider.class);
+				i.putExtra("gameCode", contentView.getText());
+				startActivity(i);
+			}
+		});
 	}
 
 	/**

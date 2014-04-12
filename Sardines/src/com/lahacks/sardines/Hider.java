@@ -5,6 +5,14 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +37,8 @@ import com.lahacks.sardines.Seeker.StreamFragment;
 
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
+	public static final String LOG_TAG = "Hider";
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -181,9 +192,109 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		}
 	}
 
-	public static class NavigationHiderFragment extends NavigationFragment {
-		// TODO
+	public static class NavigationHiderFragment extends Fragment implements SensorEventListener{
+
+		CompassView compass;
+		
+
+		LocationManager locationManager;
+		SensorManager sensorManager;
+		
+		Location currentLocation = new Location("");
+		
+		public NavigationHiderFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_hider_navigation,
+					container, false);
+			compass = (CompassView) rootView.findViewById(R.id.compassView1);
+			
+			// GPS 
+			// Acquire a reference to the system Location Manager
+			locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+			
+			// COMPASS
+			sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+			
+			return rootView;
+		}
+		
+		double latitude;
+		double longitude;
+		
+		@Override
+		public void onResume(){
+			super.onResume();
+			// Register the listener with the Location Manager to receive location updates
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+			// Register for compass updates
+			if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+				sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+			} else {
+				// Failure! No magnetometer.
+				Log.e(LOG_TAG, "No magnetomter found...");
+			}
+			
+		}
+		
+		@Override 
+		public void onPause(){
+			super.onPause();
+			locationManager.removeUpdates(locationListener);
+			
+			
+		}
+		
+		private void updateHideLocation(Location hideLocation, Location currentLocation){
+			double angle = currentLocation.bearingTo(hideLocation);
+			compass.setAngleTarget(angle, 30);
+		
+		}
+		
+		/*
+		 * COMPASS
+		 */
+		
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+				Log.v(LOG_TAG, "Compass: " + event.values[1]);
+			}
+			
+		}
+		
+		/*
+		 * GPS
+		 */
+
+		// Define a listener that responds to location updates
+		LocationListener locationListener = new LocationListener() {
+		    public void onLocationChanged(Location location) {
+		      // Called when a new location is found by the network location provider.
+		      locationUpdate(location);
+		    }
+
+		    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+		    public void onProviderEnabled(String provider) {}
+
+		    public void onProviderDisabled(String provider) {}
+		  };
+		  
+		private void locationUpdate(Location l){
+			Log.v(LOG_TAG, "New Location: "+l); // TODO
+		}
 	}
+
 
 	public static class PlayersFragment extends Fragment {
 
@@ -203,6 +314,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
 		              android.R.layout.simple_list_item_checked, android.R.id.text1, names);
+			
+			playersList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 			
 			// Assign adapter to ListView
             playersList.setAdapter(adapter); 
