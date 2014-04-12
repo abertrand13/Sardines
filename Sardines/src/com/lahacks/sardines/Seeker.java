@@ -4,6 +4,13 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,7 +19,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Seeker extends FragmentActivity implements ActionBar.TabListener {
+public class Seeker extends FragmentActivity implements ActionBar.TabListener, SensorEventListener {
 
 	private final static String LOG_TAG = "Seeker";
 	
@@ -43,6 +49,12 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seeker);
+		
+		// GPS 
+		// Acquire a reference to the system Location Manager
+		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		// Register the listener with the Location Manager to receive location updates
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -229,6 +241,44 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 					container, false);
 			return rootView;
 		}
+	}
+
+	/*
+	 * COMPASS
+	 */
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/*
+	 * GPS
+	 */
+
+	// Define a listener that responds to location updates
+	LocationListener locationListener = new LocationListener() {
+	    public void onLocationChanged(Location location) {
+	      // Called when a new location is found by the network location provider.
+	      locationUpdate(location);
+	    }
+
+	    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+	    public void onProviderEnabled(String provider) {}
+
+	    public void onProviderDisabled(String provider) {}
+	  };
+	  
+	private void locationUpdate(Location l){
+		Log.v(LOG_TAG, "New Location: "+l); // TODO
 	}
 
 }
