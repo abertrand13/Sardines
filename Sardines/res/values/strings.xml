@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_join_game">Join Game</string>
     <string name="title_activity_start_game">Start Game</string>
+    <string name="title_activity_seeker">Seeker</string>
+    <string name="title_section1">Navigation</string>
+    <string name="title_section2">Stream</string>
 
 </resources>

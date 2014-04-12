@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
     <application
@@ -33,6 +33,14 @@
         <activity
             android:name="com.lahacks.sardines.StartGame"
             android:label="@string/title_activity_start_game"
+            android:parentActivityName="com.lahacks.sardines.Splash" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lahacks.sardines.Splash" />
+        </activity>
+        <activity
+            android:name="com.lahacks.sardines.Seeker"
+            android:label="@string/title_activity_seeker"
             android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

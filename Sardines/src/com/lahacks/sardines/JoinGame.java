@@ -1,21 +1,41 @@
 package com.lahacks.sardines;
 
-import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class JoinGame extends Activity {
 
+	Button enterGameBtn;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_join_game);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
+		enterGameBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				enterGameBtnOnClick(v);
+			}
+		});
+	}
+	
+	private void enterGameBtnOnClick(View v){
+		Intent i = new Intent(this, Seeker.class);
+		startActivity(i);
 	}
 
 	/**
