@@ -12,7 +12,9 @@ public class Database {
 		//write
 		database.setValue("Do you have data?  you'll love firebase");
 		
-		database.setValue("I do have data!");
+		database.setValue("Data Table");
+		database.child("String1").setValue("This is String1");
+		database.child("String2").setValue("This is String2");
 		
 		/*database.addValueEventListener(new ValueEventListener() {
 
