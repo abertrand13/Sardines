@@ -32,6 +32,7 @@ import com.firebase.client.*;
 public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 	private final static String LOG_TAG = "Seeker";
+	private static String gameCode;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -92,7 +93,12 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 					.setTabListener(this));
 		}
 		
-		
+		//get the game code we're dealing with
+		Bundle extras = getIntent().getExtras();
+		if(extras != null) {
+			gameCode = (String)extras.get("gameCode");
+			System.out.println(gameCode);
+		}
 		
 	}
 	
@@ -276,10 +282,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			}
 			
 			// Connect to firebase
-			/*String gameCode = "testGameCode"; // TODO
 			//set up database reference
 			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
-			Firebase GameRef = database.child(gameCode);
+			Firebase GameRef = database.child("GAME ID " + gameCode);
 			Firebase hideOutLatitude = GameRef.child("hideout").child("latitude");
 			Firebase hideOutLongitude = GameRef.child("hideout").child("longitude");
 			
@@ -317,7 +322,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			Location l = new Location("");
 			l.setLatitude(latitude);
 			l.setLongitude(longitude);
-			updateHideLocation(l, currentLocation);*/
+			updateHideLocation(l, currentLocation);
 		}
 		
 		@Override 
