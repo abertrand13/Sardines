@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 
 public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 
+	private final static String LOG_TAG = "Seeker";
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -133,17 +136,25 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener {
 
 		@Override
 		public Fragment getItem(int position) {
-			//switch(position){
-			//case 0:
-			//}
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
+			Fragment f;
+			
+			Log.v(LOG_TAG, "Position: " + position);
+			
+			switch(position){
+			case 0:
+				f = new NavigationFragment();
+				break;
+			case 1:
+				f = new StreamFragment();
+				break;
+			default:
+				f = new DummySectionFragment();
+				break;
+			}
 			Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
-			return fragment;
+			f.setArguments(args);
+			return f;
 		}
 
 		@Override
