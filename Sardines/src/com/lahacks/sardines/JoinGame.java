@@ -12,7 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.widget.ProgressBar;
+>>>>>>> FETCH_HEAD
 
 import com.firebase.client.*;
 
@@ -52,9 +56,7 @@ public class JoinGame extends Activity {
 	}
 
 	private void enterGameBtnOnClick(View v){
-		//Intent i = new Intent(this, Seeker.class);
 		i = new Intent(this, Seeker.class);
-		
 		/* Verify that entered code exists in database */
 		
 
