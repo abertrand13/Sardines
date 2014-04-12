@@ -17,9 +17,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="58dp"
         android:ems="10"
-        android:textColorHint="@color/grey"
-		android:textColor="@color/white" 
-		android:hint="Game code">
+        android:hint="Game code"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/grey" >
+
         <requestFocus /> 
     </EditText>
 
