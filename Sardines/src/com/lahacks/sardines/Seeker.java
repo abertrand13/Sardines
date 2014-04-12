@@ -48,6 +48,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 	
 	LocationManager locationManager;
 	SensorManager sensorManager;
+	
+	Location currentLocation = new Location("");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,10 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		// Connect to firebase
+		int gameCode = 1234; // TODO
+		
 	}
 	
 	@Override
@@ -307,6 +313,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener, S
 	  
 	private void locationUpdate(Location l){
 		Log.v(LOG_TAG, "New Location: "+l); // TODO
+	}
+	
+	private void updateHideLocation(Location loc){
+		currentLocation.bearingTo(loc);
+	
 	}
 
 }
