@@ -12,10 +12,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import com.firebase.client.*;
 
 public class JoinGame extends Activity {
 
 	Button enterGameBtn;
+	
+	//globabl variables are bad?
+	boolean gameExists = false;
+	String inputCode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +43,26 @@ public class JoinGame extends Activity {
 		Intent i = new Intent(this, Seeker.class);
 
 		/* Verify that entered code exists in database */
+		
 
 		EditText text = (EditText) v;
-		int inputCode = Integer.parseInt(text.getText().toString());
+		//int inputCode = Integer.parseInt(text.getText().toString());
+		inputCode = text.getText().toString();
+		
+		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/testGameCode");
+		database.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot data) {
+				gameExists = data.hasChild((String)inputCode);
+				System.out.println(gameExists);
+			}
+			
+			@Override
+			public void onCancelled(FirebaseError error) {
+				System.out.println("error:" + error);
+			}
+		});
+		
 		startActivity(i);
 
 	}
