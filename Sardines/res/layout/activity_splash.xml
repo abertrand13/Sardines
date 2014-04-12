@@ -21,7 +21,7 @@
     <Button
         android:id="@+id/joinGameBtn"
         android:layout_width="150dp"
-        android:layout_height="45dp"
+        android:layout_height="65dp"
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="61dp"
@@ -33,7 +33,7 @@
     <Button
         android:id="@+id/startGameBtn"
         android:layout_width="150dp"
-        android:layout_height="45dp"
+        android:layout_height="65dp"
         android:layout_alignLeft="@+id/joinGameBtn"
         android:layout_below="@+id/joinGameBtn"
         android:gravity="left|center_vertical"
