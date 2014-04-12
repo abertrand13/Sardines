@@ -335,7 +335,12 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			l.setLatitude(latitude);
 			l.setLongitude(longitude);
 			double angle = currentLocation.bearingTo(l);
-			compass.setAngleTarget(angle, 30);
+			double dist = currentLocation.distanceTo(l);
+			int deg = (int)(3000.0*(1.0/dist));
+			if(deg < 10) deg = 10;
+			if(deg > 180) deg = 180;
+			Log.d(LOG_TAG, "TARGET] Angle: "+angle + " | Degrees: "+deg);
+			compass.setAngleTarget(angle, deg);
 		
 		}
 		
@@ -374,7 +379,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		  };
 		  
 		private void locationUpdate(Location l){
-			Log.v(LOG_TAG, "New Location: "+l); // TODO
+			currentLocation = l;
 		}
 	}
 	
