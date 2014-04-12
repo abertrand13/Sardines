@@ -6,18 +6,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 
+	private final static String LOG_TAG = "CompassView";
+	
 	private Context context;
 	private CompassViewThread thread;
 	
-	private double angle = 90;
-	private double arcRange = 30;
-	private double targetAngle = 180;
-	private double targetArcRange = 30;
+	private double angle = 350;
+	private double arcRange = 10;
+	private double targetAngle = 190;
+	private double targetArcRange = 60;
 
 	public CompassView(Context context) {
 		super(context);
@@ -39,6 +42,7 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void setup() {
+		getHolder().addCallback(this);
 	}
 
 	public void setAngle(double a, double range){
@@ -74,12 +78,13 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void draw(Canvas canvas, int angle, int arcRange) {
+		Log.v(LOG_TAG, "ANG: " + angle + " \tRNG: " + arcRange);
 		int x = getWidth();
 		int y = getHeight();
 		int r = Math.min(x, y);
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.WHITE);
+		paint.setColor(Color.argb(150, (int)((double)arcRange * (255.0/90.0)), 150, 150));
 		int drawAngle = angle - (arcRange / 2);
 		if (drawAngle < 0)
 			drawAngle += 360;
@@ -91,9 +96,9 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 
 		setWillNotDraw(false); // Allows us to use invalidate() to call onDraw()
 
-		thread = new CompassViewThread(getHolder(), this); // Start the thread that
-		//thread.setRunning(true); // will make calls to
-		//thread.start(); // onDraw()
+		thread = new CompassViewThread(holder, this); // Start the thread that
+		thread.setRunning(true); // will make calls to
+		thread.start(); // onDraw()
 	}
 
 	@Override
