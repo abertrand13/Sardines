@@ -81,11 +81,13 @@ public class JoinGame extends Activity {
 			System.out.println(playerName);
 		}
 		
-		enterGameBtn.setOnClickListener(new OnClickListener() {
+	enterGameBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				enterGameBtnOnClick(v);
+				// Don't keep adding people!
+				enterGameBtn.setOnClickListener(null);
 			}
 		});
 	}
