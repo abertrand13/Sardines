@@ -300,7 +300,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		@Override
 		public void onDestroy(){
 			super.onDestroy();
-			locationManger.removeUpdates(locationListener);
+			locationManager.removeUpdates(locationListener);
 		}
 
 		/*
