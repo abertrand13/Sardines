@@ -41,7 +41,7 @@ public class JoinGame extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_join_game);
 		// Show the Up button in the action bar.
-		setupActionBar();
+		//setupActionBar();
 
 		enterGameTxt = (EditText) findViewById(R.id.enterGameTxt);
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
@@ -81,13 +81,13 @@ public class JoinGame extends Activity {
 			System.out.println(playerName);
 		}
 		
-	enterGameBtn.setOnClickListener(new OnClickListener() {
+		enterGameBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				enterGameBtnOnClick(v);
 				// Don't keep adding people!
 				enterGameBtn.setOnClickListener(null);
+				enterGameBtnOnClick(v);
 			}
 		});
 	}
@@ -99,36 +99,33 @@ public class JoinGame extends Activity {
 		
 
 		EditText text = (EditText) enterGameTxt;
-		//int inputCode = Integer.parseInt(text.getText().toString());
 		inputCode = text.getText().toString();
 		i.putExtra("gameCode", inputCode);
 		
 		Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
-		//database.child("GAME ID " + inputCode).setValue("hey there");
 		
 		listener = database.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot data) {
-				//System.out.println(data.getName());
-				
 				//pesky async...
 				gameExists = data.hasChild("GAME ID " + inputCode);
 				if(gameExists) {
-					
 					addPlayerToDatabase();
-					//add this player to the database
-					/*Firebase newPlayerRef = database.child("GAME ID" + inputCode).child("players").push();
-					newPlayerRef.child("id").setValue(newPlayerRef.getName());
-					newPlayerRef.child("name").setValue(playerName);
-					newPlayerRef.child("latitude").setValue(0);
-					newPlayerRef.child("longitude").setValue(0);
-					newPlayerRef.child("state").setValue("hiding");*/
-					
 					startActivity(i);	
 				}
 				else
 				{
 					System.out.println("Game doesn't exist!");
+					//reset click listener
+					enterGameBtn.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// Don't keep adding people!
+							enterGameBtn.setOnClickListener(null);
+							enterGameBtnOnClick(v);
+						}
+					});
 				}
 			}
 			
@@ -137,14 +134,6 @@ public class JoinGame extends Activity {
 				System.out.println("error: " + error);
 			}
 		});
-		/*if(gameExists) {
-			startActivity(i);	
-		}
-		else
-		{
-			System.out.println("Game doesn't exist!");
-		}*/
-
 	}
 	
 	private void addPlayerToDatabase() {

@@ -23,30 +23,6 @@
         android:text="Start a Game"
         android:textColor="@color/white" />
 
-    <EditText
-        android:id="@+id/nameEntry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="your name here"
-        android:inputType="textPersonName"
-        android:textColor="@color/black"
-        android:textColorHint="@color/grey" >
-
-        <requestFocus />
-    </EditText>
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/fishy" />
-
     <Button
         android:id="@+id/joinGameBtn"
         android:layout_width="150dp"
@@ -59,5 +35,26 @@
         android:padding="10dp"
         android:text="Join a Game"
         android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/nameEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/joinGameBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:ems="10"
+        android:hint="your name here"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/fishy" />
 
 </RelativeLayout>

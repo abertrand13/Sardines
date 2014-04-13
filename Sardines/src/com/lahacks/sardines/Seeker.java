@@ -62,8 +62,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		// Show the Up button in the action bar.
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -341,6 +344,13 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			super.onPause();
 			locationManager.removeUpdates(locationListener);			
 			
+			
+		}
+		
+		@Override
+		public void onDestroy(){
+			super.onDestroy();
+			locationManager.removeUpdates(locationListener);
 		}
 		
 		private void updateHideLocation(){
