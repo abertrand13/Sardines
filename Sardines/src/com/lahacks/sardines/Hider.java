@@ -301,14 +301,19 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				public void onDataChange(DataSnapshot snap) {
 					angles.clear();
 					for(DataSnapshot d : snap.getChildren()){
-						double lat = Double.parseDouble((d.child("latitude").getValue()).toString());
-						double lng = Double.parseDouble((d.child("longitude").getValue()).toString());
-						Location l = new Location("");
-						l.setLatitude(lat);
-						l.setLongitude(lng);
-						Log.d(LOG_TAG, "SeekerLoc: Lat="+lat+" Lng="+lng);
-						double bearing = currentLocation.bearingTo(l);
+						if(d.child("id").getValue().equals(pin)) continue; // skip myself
+						try{
+							double lat = Double.parseDouble((d.child("latitude").getValue()).toString());
+							double lng = Double.parseDouble((d.child("longitude").getValue()).toString());
+							Location l = new Location("");
+							l.setLatitude(lat);
+							l.setLongitude(lng);
+							Log.d(LOG_TAG, "SeekerLoc: Lat="+lat+" Lng="+lng);
+							double bearing = currentLocation.bearingTo(l);
 						angles.add((int)bearing);
+						}catch(Exception e){
+							Log.d(LOG_TAG, "You done fucked up, Firebase.");
+						}
 					}
 				}
 				
@@ -514,6 +519,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		
 		@Override
 		public void onResume(){
+			super.onResume();
 			GameRef.child("players").addListenerForSingleValueEvent(new ValueEventListener() {
 				
 				@Override
@@ -521,7 +527,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					ArrayList<String> names = new ArrayList<String>();
 					for(DataSnapshot ds : arg0.getChildren()){
 						String name = ds.child("name").getValue().toString();
-						names.add(name);
+						if(!ds.child("id").getValue().equals(pin)) names.add(name);
 					}
 					ArrayAdapter<String> adapt = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, names);
 					playersList.setAdapter(adapt);
