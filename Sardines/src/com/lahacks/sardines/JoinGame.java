@@ -155,8 +155,12 @@ public class JoinGame extends Activity {
 		database.child("GAME ID " + inputCode).child("numbers").child("seeking").addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot snap) {
-				int value = (Integer) snap.getValue();
-				snap.getRef().setValue(value+1);
+				try {
+					int value = (Integer) snap.getValue();
+					snap.getRef().setValue(value+1);
+				} catch (Exception e) {
+					snap.getRef().setValue(1);
+				}
 			}
 			
 			@Override
