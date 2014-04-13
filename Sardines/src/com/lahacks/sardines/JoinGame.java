@@ -157,8 +157,9 @@ public class JoinGame extends Activity {
 			public void onDataChange(DataSnapshot snap) {
 				try {
 					int value = (Integer) snap.getValue();
-					snap.getRef().setValue(value+1);
+					//snap.getRef().setValue(value+1);
 				} catch (Exception e) {
+					System.out.println("POINTER!");
 					snap.getRef().setValue(1);
 				}
 			}
