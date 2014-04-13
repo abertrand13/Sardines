@@ -513,6 +513,12 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 						int arg2, long arg3) {
 					Log.d(LOG_TAG, "#"+arg3+" was clicked: "+idsList.get((int)arg3));
 					GameRef.child("players").child(idsList.get((int)arg3)).child("state").setValue("hiding");
+					Firebase notifs = GameRef.child("notifications");
+					Firebase notifPush = notifs.push();
+					
+					String name = getActivity().getSharedPreferences("splash", 0).getString("name", "Someone");
+					
+					notifPush.setValue(name+" has finished.");
 					playersList.getChildAt((int)arg3).setEnabled(false);
 					playersList.getChildAt((int)arg3).setClickable(false);
 				}
