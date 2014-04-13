@@ -64,12 +64,6 @@ public class StartGame extends Activity {
 		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
 		for(int j = 0; j < 101 ; j++) {
 			progress.setProgress(j);
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		
