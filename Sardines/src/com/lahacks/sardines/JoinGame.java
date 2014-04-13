@@ -86,7 +86,8 @@ public class JoinGame extends Activity {
 			@Override
 			public void onClick(View v) {
 				// Don't keep adding people!
-				enterGameBtn.setOnClickListener(null);
+				//enterGameBtn.setOnClickListener(null);
+				enterGameBtn.setEnabled(false);
 				enterGameBtnOnClick(v);
 			}
 		});
@@ -117,8 +118,9 @@ public class JoinGame extends Activity {
 				else
 				{
 					System.out.println("Game doesn't exist!");
+					enterGameBtn.setEnabled(true);
 					//reset click listener
-					enterGameBtn.setOnClickListener(null);
+					/*enterGameBtn.setOnClickListener(null);
 					enterGameBtn.setOnClickListener(new OnClickListener() {
 
 						@Override
@@ -127,7 +129,7 @@ public class JoinGame extends Activity {
 							enterGameBtn.setOnClickListener(null);
 							enterGameBtnOnClick(v);
 						}
-					});
+					});*/
 				}
 			}
 			
