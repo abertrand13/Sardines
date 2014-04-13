@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.firebase.client.Firebase;
+import com.firebase.client.*;
 
 public class StartGame extends Activity {
 	
@@ -75,6 +75,18 @@ public class StartGame extends Activity {
 		
 		setupActionBar();
 		
+		Firebase players = dataRef.child("players");
+		players.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot snap) {
+				connectedFriends = (int) (snap.getChildrenCount()-1);
+				onConnected();
+			}
+			
+			@Override
+			public void onCancelled(FirebaseError error) {}
+		});
+		
 		Button beginGameBtn = (Button) findViewById(R.id.beginGameBtn);
 		beginGameBtn.setOnClickListener(new OnClickListener() {
 			
@@ -105,7 +117,7 @@ public class StartGame extends Activity {
 	}
 	
 	public void onConnected() {
-		connectedFriends++;
+		//connectedFriends++;
 		TextView view = (TextView) findViewById(R.id.friendsConnected);
 		view.setText(Integer.toString(connectedFriends) + "friends have entered the room");
 	}
