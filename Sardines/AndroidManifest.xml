@@ -59,7 +59,7 @@
             android:name="com.lahacks.sardines.Hider"
             android:label="@string/title_activity_hider"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.lahacks.sardines.Splash" >
+            android:parentActivityName="com.lahacks.sardines.Splash">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lahacks.sardines.Splash" />
