@@ -39,7 +39,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 	private static String pin;
 	
 	ValueEventListener listener;
-	TextView latestNotification;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -460,7 +459,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				Bundle savedInstanceState) {
 			
 			// Access database and pull most recent notifications
-			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			/*Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 			Firebase GameRef = database.child("GAME ID " + gameCode);
 			ValueEventListener listener = GameRef.addValueEventListener(new ValueEventListener() {
 			    @Override
@@ -473,7 +472,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			      Object update = newNotification.getValue(); 
 			      System.out.println("Update = " + update);
 			   
-			      latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
+			      TextView latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
 			      
 			      String s = update.toString();
 			      latestNotification.setText(s);
@@ -484,7 +483,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			    	String name = "";
 			    	for(DataSnapshot child : notifications.getChildren()) {
 			    		if(Integer.parseInt(child.getName()) < smallestID) {
-			    			smallestID = Integer.parseInt(child.getName());
 			    			name = child.getName();
 			    		}
 			    	}			    	
@@ -496,7 +494,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 					System.err.println("Listener was cancelled");
 					
 				}
-			});
+			});*/
 			
 			// Update view with notifications
 			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
