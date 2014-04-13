@@ -457,45 +457,45 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			
-			// Access database and pull most recent notifications
-			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
-			Firebase GameRef = database.child("GAME ID " + gameCode);
-			ValueEventListener listener = GameRef.addValueEventListener(new ValueEventListener() {
-			    @Override
-			    public void onDataChange(DataSnapshot snapshot) {
-			    	
-			      DataSnapshot notifications = snapshot.child("Notifications");
-			      System.out.println("Notifications found");
-			      DataSnapshot newNotification = getMostRecent(notifications);
-			      System.out.println("Most recent found = " + newNotification.getValue());
-			      Object update = newNotification.getValue(); 
-			      System.out.println("Update = " + update);
-			   
-			      TextView latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
-			      
-			      String s = update.toString();
-			      latestNotification.setText(s);
-			      
-			    }			    
-			    private DataSnapshot getMostRecent(DataSnapshot notifications) {
-			    	int smallestID = Integer.MAX_VALUE;
-			    	String name = "";
-			    	for(DataSnapshot child : notifications.getChildren()) {
-			    		if(Integer.parseInt(child.getName()) < smallestID) {
-			    			smallestID = Integer.parseInt(child.getName());
-			    			name = child.getName();
-			    		}
-			    	}			    	
-			    	return notifications.child(name);
-			    }
-
-				@Override
-				public void onCancelled(FirebaseError arg0) {
-					System.err.println("Listener was cancelled");
-					
-				}
-			});
-			
+//			// Access database and pull most recent notifications
+//			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+//			Firebase GameRef = database.child("GAME ID " + gameCode);
+//			ValueEventListener listener = GameRef.addValueEventListener(new ValueEventListener() {
+//			    @Override
+//			    public void onDataChange(DataSnapshot snapshot) {
+//			    	
+//			      DataSnapshot notifications = snapshot.child("Notifications");
+//			      System.out.println("Notifications found");
+//			      DataSnapshot newNotification = getMostRecent(notifications);
+//			      System.out.println("Most recent found = " + newNotification.getValue());
+//			      Object update = newNotification.getValue(); 
+//			      System.out.println("Update = " + update);
+//			   
+//			      TextView latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
+//			      
+//			      String s = update.toString();
+//			      latestNotification.setText(s);
+//			      
+//			    }			    
+//			    private DataSnapshot getMostRecent(DataSnapshot notifications) {
+//			    	int smallestID = Integer.MAX_VALUE;
+//			    	String name = "";
+//			    	for(DataSnapshot child : notifications.getChildren()) {
+//			    		if(Integer.parseInt(child.getName()) < smallestID) {
+//			    			smallestID = Integer.parseInt(child.getName());
+//			    			name = child.getName();
+//			    		}
+//			    	}			    	
+//			    	return notifications.child(name);
+//			    }
+//
+//				@Override
+//				public void onCancelled(FirebaseError arg0) {
+//					System.err.println("Listener was cancelled");
+//					
+//				}
+//			});
+//			
 			// Update view with notifications
 			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
 					container, false);
