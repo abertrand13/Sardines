@@ -457,6 +457,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 		private final static String LOG_TAG = "PlayersFragment";
 
+		Firebase GameRef;
+		
 		public PlayersFragment() {
 		}
 
@@ -470,7 +472,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			// set up database reference
 			Firebase database = new Firebase(
 					"https://intense-fire-7136.firebaseio.com/");
-			Firebase GameRef = database.child("GAME ID " + gameCode);
+			GameRef = database.child("GAME ID " + gameCode);
 			GameRef.child("players").addChildEventListener(
 					new ChildEventListener() {
 
@@ -533,6 +535,28 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			});
 
 			return rootView;
+		}
+		
+		@Override
+		public void onResume(){
+			GameRef.child("players").addListenerForSingleValueEvent(new ValueEventListener() {
+				
+				@Override
+				public void onDataChange(DataSnapshot arg0) {
+					ArrayList<String> names = new ArrayList<String>();
+					for(DataSnapshot ds : arg0.getChildren()){
+						String name = ds.child("name").getValue().toString();
+						names.add(name);
+					}
+					ArrayAdapter<String> adapt = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, names);
+					playersList.setAdapter(adapt);
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					Log.e(LOG_TAG, "Firebase error");
+				}
+			});
 		}
 	}
 
