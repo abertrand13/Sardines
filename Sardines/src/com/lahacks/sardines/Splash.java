@@ -50,13 +50,13 @@ public class Splash extends Activity {
 
              @Override
              public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                 startGameBtn = (Button) findViewById(R.id.startGameBtn);
-                 joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
-                 
-                 startGameBtn.setEnabled(true);
-                 joinGameBtn.setEnabled(true);
-
+            	 if (s.length() != 0) {
+	                 startGameBtn = (Button) findViewById(R.id.startGameBtn);
+	                 joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
+	                 
+	                 startGameBtn.setEnabled(true);
+	                 joinGameBtn.setEnabled(true);
+            	 }
              } 
         });
         
