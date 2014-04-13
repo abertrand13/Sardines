@@ -1,5 +1,6 @@
 package com.lahacks.sardines;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.firebase.client.*;
+import com.lahacks.sardines.Hider.NavigationHiderFragment;
 
 public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
@@ -245,6 +247,14 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		
 		Location currentLocation = new Location("");
 		
+
+		private float[] mMagneticValues;
+		private float[] mAccelerometerValues;
+
+		private float mAzimuth = 0;
+		private float mPitch = 0;
+		private float mRoll = 0;
+		
 		public NavigationFragment() {
 		}
 
@@ -276,6 +286,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			// Register for compass updates
 			if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
 				sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+				sensorManager.registerListener(this, sensorManager
+						.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						SensorManager.SENSOR_DELAY_GAME);
 			} else {
 				// Failure! No magnetometer.
 				Log.e(LOG_TAG, "No magnetomter found...");
@@ -296,6 +309,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				public void onDataChange(DataSnapshot snap) {
 					//fuckery.
 					latitude = Double.parseDouble(snap.getValue().toString());
+					updateHideLocation();
 				}
 				
 				@Override
@@ -309,6 +323,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				public void onDataChange(DataSnapshot snap) {
 					//more fuckery.
 					longitude = Double.parseDouble(snap.getValue().toString());
+					updateHideLocation();
 				}
 				
 				@Override
@@ -318,11 +333,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			});
 			
 			
-			// Set up a data change listener, when you get a new location, so this:
-			Location l = new Location("");
-			l.setLatitude(latitude);
-			l.setLongitude(longitude);
-			updateHideLocation(l, currentLocation);
 		}
 		
 		@Override 
@@ -333,9 +343,18 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			
 		}
 		
-		private void updateHideLocation(Location hideLocation, Location currentLocation){
-			double angle = currentLocation.bearingTo(hideLocation);
-			compass.setAngleTarget(angle, 30);
+		private void updateHideLocation(){
+			Location l = new Location("");
+			l.setLatitude(latitude);
+			l.setLongitude(longitude);
+			double angle = currentLocation.bearingTo(l);
+			double dist = currentLocation.distanceTo(l);
+			int deg = (int)(3000.0*(1.0/dist));
+			//deg = deg - (mAzimuth*(180.0/Math.PI));
+			if(deg < 10) deg = 10;
+			if(deg > 180) deg = 180;
+			Log.d(LOG_TAG, "TARGET] Angle: "+angle + " | Degrees: "+deg);
+			compass.setAngleTarget(angle, deg);
 		
 		}
 		
@@ -349,12 +368,32 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			
 		}
 
+		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-				Log.v(LOG_TAG, "Compass: " + event.values[1]);
+			synchronized (NavigationFragment.this) {
+				switch (event.sensor.getType()) {
+				case Sensor.TYPE_MAGNETIC_FIELD:
+					mMagneticValues = event.values.clone();
+					break;
+				case Sensor.TYPE_ACCELEROMETER:
+					mAccelerometerValues = event.values.clone();
+					break;
+				}
+
+				if (mMagneticValues != null && mAccelerometerValues != null) {
+					float[] R = new float[16];
+					SensorManager.getRotationMatrix(R, null,
+							mAccelerometerValues, mMagneticValues);
+					float[] orientation = new float[3];
+					SensorManager.getOrientation(R, orientation);
+					mAzimuth = orientation[0];
+					mPitch = orientation[1];
+					mRoll = orientation[2];
+					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+				}
 			}
-			
+
 		}
 		
 		/*
@@ -376,7 +415,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		  };
 		  
 		private void locationUpdate(Location l){
-			Log.v(LOG_TAG, "New Location: "+l); // TODO
+			Log.d(LOG_TAG, "Location: Lat="+l.getLatitude()+" \tLng="+l.getLongitude());
+			currentLocation = l;
 		}
 	}
 	

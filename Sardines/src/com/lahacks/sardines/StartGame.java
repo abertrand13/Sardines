@@ -45,10 +45,18 @@ public class StartGame extends Activity {
 		dataRef.child("hideout").child("latitude").setValue(0);
 		dataRef.child("hideout").child("longitude").setValue(0);
 		
+		//get name of player
+		String playerName = "";
+		Bundle extras = getIntent().getExtras();
+		if(extras != null) {
+			playerName = (String)extras.get("name");
+			System.out.println(playerName);
+		}
+		
 		//set up player database
 		Firebase newPlayerRef = dataRef.child("players").push();
 		newPlayerRef.child("id").setValue(newPlayerRef.getName());
-		newPlayerRef.child("name").setValue("Alex");
+		newPlayerRef.child("name").setValue(playerName);
 		newPlayerRef.child("latitude").setValue(0);
 		newPlayerRef.child("longitude").setValue(0);
 		newPlayerRef.child("state").setValue("hiding");

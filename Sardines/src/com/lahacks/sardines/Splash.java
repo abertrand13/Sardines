@@ -9,12 +9,14 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 import android.text.TextWatcher;
 import android.text.Editable;
 
 public class Splash extends Activity {
 
+	EditText nameTxt;
 	Button startGameBtn;
 	Button joinGameBtn;
 	EditText et;
@@ -25,6 +27,7 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         
+        nameTxt = (EditText) findViewById(R.id.nameEntry);
         startGameBtn = (Button) findViewById(R.id.startGameBtn);
         joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
         
@@ -77,11 +80,15 @@ public class Splash extends Activity {
     
     public void joinGameOnClick(View v){
     	Intent i = new Intent(this, JoinGame.class);
+    	String name = nameTxt.getText().toString();
+    	i.putExtra("name", name);
     	startActivity(i);
     }
     
     public void startGameOnClick(View v){
     	Intent i = new Intent(this, StartGame.class);
+    	String name = nameTxt.getText().toString();
+    	i.putExtra("name", name);
     	startActivity(i);
     }
 
