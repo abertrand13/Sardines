@@ -35,6 +35,9 @@ import com.lahacks.sardines.Seeker.DummySectionFragment;
 import com.lahacks.sardines.Seeker.NavigationFragment;
 import com.lahacks.sardines.Seeker.StreamFragment;
 
+import com.firebase.client.*;
+import java.util.Map;
+
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 	public static final String LOG_TAG = "Hider";
@@ -48,13 +51,15 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
-	
-	//static LocationManager locationManager;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	
+	//game variables
+	static String gameCode;
+	static String pin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,14 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
+		}
+		
+
+		//Set references for database interaction
+		Bundle extras = getIntent().getExtras();
+		if(extras != null) {
+			gameCode = (String)extras.get("gameCode");
+			pin = (String)extras.get("pin");
 		}
 	}
 
@@ -242,6 +255,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			sensorManager = (SensorManager) getActivity().getSystemService(
 					Context.SENSOR_SERVICE);
 
+			
 			return rootView;
 		}
 
@@ -308,7 +322,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					mAzimuth = orientation[0];
 					mPitch = orientation[1];
 					mRoll = orientation[2];
-					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					//Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
 					
 					ArrayList<Integer> rotated = new ArrayList<Integer>();
 					for(int a : angles){
@@ -316,7 +330,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 						if(r < 0) r += 360;
 						if(r >= 360) r -= 360;
 						rotated.add(r);
-						Log.d(LOG_TAG, "r=" + r);
+						//Log.d(LOG_TAG, "r=" + r);
 					}
 					compass.setSeekerAngles(rotated);
 				}
@@ -351,6 +365,48 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			System.out.println("getting location...");
 			Log.v(LOG_TAG, "New Location: " + l); // TODO
 			System.out.println(l);
+			latitude = l.getLatitude();
+			longitude = l.getLongitude();
+			
+			//update to database
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			Firebase playerRef = gameRef.child("players").child(pin);
+			playerRef.child("latitude").setValue(latitude);
+			playerRef.child("longitude").setValue(longitude);
+			
+			//update hideout part of database if this is the original hider
+			//NOM NOM NOM NOM NOM NOM NOM NOM NOM
+			playerRef.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					Object value = snap.getValue();
+					//cast to map to check values
+					String hider = (String)((Map)value).get("hider");
+					if(hider.equals("true")) {
+						//too many goddamn parentheses
+						Object lat = ((Map)value).get("latitude");
+						double latitude = (Double)lat;
+						Object longi = ((Map)value).get("longitude");
+						double longitude = (Double)longi;
+						//double longitude = Double.parseDouble((String)((Map)value).get("longitude"));
+						updateHideoutLocation(latitude, longitude);
+					}
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError error) {
+					System.out.println("error: " + error);
+				}
+			});
+			
+		}
+		
+		private void updateHideoutLocation(double latitude, double longitude) {
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			gameRef.child("hideout").child("latitude").setValue(latitude);
+			gameRef.child("hideout").child("longitude").setValue(longitude);
 		}
 	}
 

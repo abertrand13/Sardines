@@ -21,6 +21,7 @@ public class StartGame extends Activity {
 	public int connectedFriends;
 	
 	TextView contentView;
+	String pin; //player's identification string
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +57,12 @@ public class StartGame extends Activity {
 		//set up player database
 		Firebase newPlayerRef = dataRef.child("players").push();
 		newPlayerRef.child("id").setValue(newPlayerRef.getName());
+		pin = newPlayerRef.getName();
 		newPlayerRef.child("name").setValue(playerName);
 		newPlayerRef.child("latitude").setValue(0);
 		newPlayerRef.child("longitude").setValue(0);
 		newPlayerRef.child("state").setValue("hiding");
+		newPlayerRef.child("hider").setValue("true"); //the original hider
 		
 		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
 		
@@ -85,6 +88,7 @@ public class StartGame extends Activity {
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), Hider.class);
 				i.putExtra("gameCode", contentView.getText());
+				i.putExtra("pin", pin);
 				startActivity(i);
 			}
 		});
