@@ -25,7 +25,7 @@
         android:layout_above="@+id/startGameBtn"
         android:layout_alignLeft="@+id/startGameBtn"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/button"
+        android:background="@drawable/custom_selector"
         android:gravity="left|center_vertical"
         android:padding="10dp"
         android:text="Join a Game" />
@@ -37,7 +37,7 @@
         android:layout_alignLeft="@+id/imageView1"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/button"
+        android:background="@drawable/custom_selector"
         android:gravity="left|center_vertical"
         android:padding="10dp"
         android:text="Start a Game" />
