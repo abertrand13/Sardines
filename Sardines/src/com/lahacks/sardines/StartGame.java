@@ -64,6 +64,9 @@ public class StartGame extends Activity {
 		newPlayerRef.child("state").setValue("hiding");
 		newPlayerRef.child("hider").setValue("true"); //the original hider
 		
+		
+		dataRef.child("numbers").child("hiding").setValue(1);
+		
 		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
 		
 		

@@ -150,6 +150,20 @@ public class JoinGame extends Activity {
 		newPlayerRef.child("latitude").setValue(0);
 		newPlayerRef.child("longitude").setValue(0);
 		newPlayerRef.child("state").setValue("seeking");
+		
+		//bullshit:
+		database.child("GAME ID " + inputCode).child("numbers").child("seeking").addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot snap) {
+				int value = (Integer) snap.getValue();
+				snap.getRef().setValue(value+1);
+			}
+			
+			@Override
+			public void onCancelled(FirebaseError error) {
+				System.out.println("error: " + error);
+			}
+		});
 	}
 
 	/**

@@ -532,7 +532,11 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			Firebase playerRef = gameRef.child("players").child(pin);
 			playerRef.child("latitude").setValue(currentLocation.getLatitude());
 			playerRef.child("longitude").setValue(currentLocation.getLongitude());
+			
+			
 		}
+		
+		
 	}
 	
 	public static class StreamFragment extends Fragment {
