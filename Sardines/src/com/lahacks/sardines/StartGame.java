@@ -113,13 +113,13 @@ public class StartGame extends Activity {
 	public void onConnected() {
 		//connectedFriends++;
 		TextView view = (TextView) findViewById(R.id.friendsConnected);
-		view.setText(Integer.toString(connectedFriends) + "friends have entered the room");
+		view.setText(Integer.toString(connectedFriends) + " friends have entered the room");
 	}
 	
 	public void onDisconnect() {
 		connectedFriends--;
 		TextView view = (TextView) findViewById(R.id.friendsConnected);
-		view.setText(Integer.toString(connectedFriends) + "friends have entered the room");
+		view.setText(Integer.toString(connectedFriends) + " friends have entered the room");
 	}
 
 	@Override
