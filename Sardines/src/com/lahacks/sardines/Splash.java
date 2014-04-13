@@ -57,6 +57,13 @@ public class Splash extends Activity {
 	                 startGameBtn.setEnabled(true);
 	                 joinGameBtn.setEnabled(true);
             	 }
+            	 else {
+            		 startGameBtn = (Button) findViewById(R.id.startGameBtn);
+            		 joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
+            		 
+            		 startGameBtn.setEnabled(false);
+            		 joinGameBtn.setEnabled(false);
+            	 }
              } 
         });
         
