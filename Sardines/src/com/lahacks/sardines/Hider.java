@@ -183,9 +183,6 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 			switch (position) {
 			case 1:
-				f = new StreamFragment();
-				break;
-			case 2:
 				f = new PlayersFragment();
 				break;
 			default:
@@ -200,8 +197,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 3;
+			// Show 2 total pages.
+			return 2;
 		}
 
 		@Override
@@ -212,8 +209,6 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				return getString(R.string.title_section_navigation)
 						.toUpperCase(l);
 			case 1:
-				return getString(R.string.title_section_stream).toUpperCase(l);
-			case 2:
 				return getString(R.string.title_section_players).toUpperCase(l);
 			}
 			return null;
@@ -473,6 +468,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		Firebase GameRef;
 		
 		ArrayList<String> idsList = new ArrayList<String>();
+		ArrayList<String> namesList = new ArrayList<String>();
 		
 		public PlayersFragment() {
 		}
@@ -516,7 +512,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					Firebase notifs = GameRef.child("notifications");
 					Firebase notifPush = notifs.push();
 					
-					String name = getActivity().getSharedPreferences("splash", 0).getString("name", "Someone");
+					String name = namesList.get((int)arg3);
 					
 					notifPush.setValue(name+" has finished.");
 					playersList.getChildAt((int)arg3).setEnabled(false);
@@ -547,6 +543,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					ArrayAdapter<String> adapt = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, names);
 					playersList.setAdapter(adapt);
 					idsList = ids;
+					namesList = names;
 				}
 				
 				@Override

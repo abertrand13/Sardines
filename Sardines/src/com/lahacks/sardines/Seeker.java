@@ -28,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.client.*;
@@ -266,6 +268,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		private float mPitch = 0;
 		private float mRoll = 0;
 		
+		private TextView notification;
+		
 		public NavigationFragment() {
 		}
 
@@ -275,6 +279,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			View rootView = inflater.inflate(R.layout.fragment_seeker_navigation,
 					container, false);
 			compass = (CompassView) rootView.findViewById(R.id.compassView1);
+			
+			notification = (TextView) rootView.findViewById(R.id.latestNotification);
 			
 			// GPS 
 			// Acquire a reference to the system Location Manager
@@ -354,6 +360,37 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				public void onCancelled(FirebaseError arg0) {
 					// TODO Auto-generated method stub
 					
+				}
+			});
+			
+			GameRef.child("notifications").addChildEventListener(new ChildEventListener() {
+				
+				@Override
+				public void onChildRemoved(DataSnapshot arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildMoved(DataSnapshot arg0, String arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildChanged(DataSnapshot arg0, String arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildAdded(DataSnapshot arg0, String arg1) {
+					notification.setText("Latest Notification\n"+arg0.getValue());
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// Abort
 				}
 			});
 			
@@ -466,16 +503,74 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 	
 	public static class StreamFragment extends Fragment {
 
+		ArrayList<String> notifications = new ArrayList<String>();
+		ListView listView;
+		
 		public StreamFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+			
+			// Update view with notifications
+			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
+					container, false);
 
 			// Access database and pull most recent notifications
-			/*Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
 			Firebase GameRef = database.child("GAME ID " + gameCode);
+			
+			listView = (ListView) rootView.findViewById(R.id.notificationsList);
+			
+			GameRef.child("notifications").addChildEventListener(new ChildEventListener() {
+				
+				@Override
+				public void onChildRemoved(DataSnapshot arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildMoved(DataSnapshot arg0, String arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildChanged(DataSnapshot arg0, String arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildAdded(DataSnapshot arg0, String arg1) {
+					notifications.add(arg0.getValue().toString());
+					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+							getActivity(),
+							android.R.layout.simple_list_item_1,
+							android.R.id.text1, notifications);
+
+					listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+					// Assign adapter to ListView
+					listView.setAdapter(adapter);
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+				}
+			});
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+					this.getActivity(),
+					android.R.layout.simple_list_item_1,
+					android.R.id.text1, new String[]{"No notifications yet."});
+
+			// Assign adapter to ListView
+			listView.setAdapter(adapter);
+			
+			/*
 			ValueEventListener listener = GameRef.addValueEventListener(new ValueEventListener() {
 			    @Override
 			    public void onDataChange(DataSnapshot snapshot) {
@@ -512,9 +607,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			});*/
 			
 
-			// Update view with notifications
-			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
-					container, false);
+			
 			return rootView;
 		}
 	}
