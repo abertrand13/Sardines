@@ -482,6 +482,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			    	String name = "";
 			    	for(DataSnapshot child : notifications.getChildren()) {
 			    		if(Integer.parseInt(child.getName()) < smallestID) {
+			    			smallestID = Integer.parseInt(child.getName());
 			    			name = child.getName();
 			    		}
 			    	}			    	
