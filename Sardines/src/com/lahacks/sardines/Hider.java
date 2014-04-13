@@ -2,6 +2,7 @@ package com.lahacks.sardines;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -26,6 +27,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -35,15 +38,12 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.lahacks.sardines.Seeker.DummySectionFragment;
 import com.lahacks.sardines.Seeker.StreamFragment;
 
-
-
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
-	static int gameCode = 0;
-	
 	public static final String LOG_TAG = "Hider";
 
 	/**
@@ -55,24 +55,30 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
-	
-	//static LocationManager locationManager;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
 
+	// game variables
+	static String gameCode;
+	static String pin;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_hider);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		// Show the Up button in the action bar.
-		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -83,9 +89,10 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		//Set up location manager
-		//locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-		
+		// Set up location manager
+		// locationManager =
+		// (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
@@ -107,10 +114,13 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
+
+		// Set references for database interaction
 		Bundle extras = getIntent().getExtras();
-		if(extras != null)
-			gameCode = extras.getInt("gameCode");
+		if (extras != null) {
+			gameCode = (String) extras.get("gameCode");
+			pin = (String) extras.get("pin");
+		}
 	}
 
 	@Override
@@ -319,15 +329,17 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					mAzimuth = orientation[0];
 					mPitch = orientation[1];
 					mRoll = orientation[2];
-					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
-					
+					// Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+
 					ArrayList<Integer> rotated = new ArrayList<Integer>();
-					for(int a : angles){
-						int r = (int)(a-(mAzimuth*(180.0/Math.PI)));
-						if(r < 0) r += 360;
-						if(r >= 360) r -= 360;
+					for (int a : angles) {
+						int r = (int) (a - (mAzimuth * (180.0 / Math.PI)));
+						if (r < 0)
+							r += 360;
+						if (r >= 360)
+							r -= 360;
 						rotated.add(r);
-						Log.d(LOG_TAG, "r=" + r);
+						// Log.d(LOG_TAG, "r=" + r);
 					}
 					compass.setSeekerAngles(rotated);
 				}
@@ -362,13 +374,58 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			System.out.println("getting location...");
 			Log.v(LOG_TAG, "New Location: " + l); // TODO
 			System.out.println(l);
+			latitude = l.getLatitude();
+			longitude = l.getLongitude();
+
+			// update to database
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			Firebase playerRef = gameRef.child("players").child(pin);
+			playerRef.child("latitude").setValue(latitude);
+			playerRef.child("longitude").setValue(longitude);
+
+			// update hideout part of database if this is the original hider
+			// NOM NOM NOM NOM NOM NOM NOM NOM NOM
+			playerRef.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					Object value = snap.getValue();
+					// cast to map to check values
+					String hider = (String) ((Map) value).get("hider");
+					if (hider.equals("true")) {
+						// too many goddamn parentheses
+						Object lat = ((Map) value).get("latitude");
+						double latitude = (Double) lat;
+						Object longi = ((Map) value).get("longitude");
+						double longitude = (Double) longi;
+						// double longitude =
+						// Double.parseDouble((String)((Map)value).get("longitude"));
+						updateHideoutLocation(latitude, longitude);
+					}
+				}
+
+				@Override
+				public void onCancelled(FirebaseError error) {
+					System.out.println("error: " + error);
+				}
+			});
+
+		}
+
+		private void updateHideoutLocation(double latitude, double longitude) {
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			gameRef.child("hideout").child("latitude").setValue(latitude);
+			gameRef.child("hideout").child("longitude").setValue(longitude);
 		}
 	}
 
 	public static class PlayersFragment extends Fragment {
 
 		ListView playersList;
-		
+
 		private final static String LOG_TAG = "PlayersFragment";
 
 		public PlayersFragment() {
@@ -379,44 +436,47 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_hider_players,
 					container, false);
-			
+
 			// Connect to firebase
-			//set up database reference
-			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			// set up database reference
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
 			Firebase GameRef = database.child("GAME ID " + gameCode);
-			GameRef.child("players").addChildEventListener(new ChildEventListener() {
-				
-				@Override
-				public void onChildRemoved(DataSnapshot arg0) {
-					Log.v(LOG_TAG, "CHILD removed");
-					
-				}
-				
-				@Override
-				public void onChildMoved(DataSnapshot arg0, String arg1) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void onChildChanged(DataSnapshot arg0, String arg1) {
-					Log.v(LOG_TAG, "CHILD chnaged");
-					
-				}
-				
-				@Override
-				public void onChildAdded(DataSnapshot arg0, String arg1) {
-					Log.v(LOG_TAG, "CHILD added");
-					
-				}
-				
-				@Override
-				public void onCancelled(FirebaseError arg0) {
-					Log.v(LOG_TAG, "CHILD cancelled");
-					
-				}
-			});
-			
+			GameRef.child("players").addChildEventListener(
+					new ChildEventListener() {
+
+						@Override
+						public void onChildRemoved(DataSnapshot arg0) {
+							Log.v(LOG_TAG, "CHILD removed");
+
+						}
+
+						@Override
+						public void onChildMoved(DataSnapshot arg0, String arg1) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void onChildChanged(DataSnapshot arg0,
+								String arg1) {
+							Log.v(LOG_TAG, "CHILD chnaged");
+
+						}
+
+						@Override
+						public void onChildAdded(DataSnapshot arg0, String arg1) {
+							Log.v(LOG_TAG, "CHILD added");
+
+						}
+
+						@Override
+						public void onCancelled(FirebaseError arg0) {
+							Log.v(LOG_TAG, "CHILD cancelled");
+
+						}
+					});
+
 			playersList = (ListView) rootView
 					.findViewById(R.id.playersListView);
 
