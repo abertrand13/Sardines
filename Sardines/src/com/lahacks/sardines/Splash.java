@@ -36,7 +36,9 @@ public class Splash extends Activity {
         
         sharedPrefs = getSharedPreferences("splash", 0);
         if(sharedPrefs.contains("name")){
-        	et.setText(sharedPrefs.getString("name", ""));
+        	nameTxt.setText(sharedPrefs.getString("name", ""));
+        	startGameBtn.setEnabled(true);
+        	joinGameBtn.setEnabled(true);
         }
         
         

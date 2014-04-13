@@ -341,9 +341,15 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		@Override 
 		public void onPause(){
 			super.onPause();
+			
+			
+			
+		}
+		
+		@Override
+		public void onDestroy(){
+			super.onDestroy();
 			locationManager.removeUpdates(locationListener);
-			
-			
 		}
 		
 		private void updateHideLocation(){

@@ -294,8 +294,13 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		@Override
 		public void onPause() {
 			super.onPause();
-			locationManager.removeUpdates(locationListener);
 
+		}
+		
+		@Override
+		public void onDestroy(){
+			super.onDestroy();
+			locationManger.removeUpdates(locationListener);
 		}
 
 		/*
@@ -409,6 +414,30 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				public void onCancelled(FirebaseError error) {
 					System.out.println("error: " + error);
 				}
+			});
+			
+			gameRef.child("players").addValueEventListener(new ValueEventListener(){
+
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					angles.clear();
+					for(DataSnapshot d : snap.getChildren()){
+						double lat = (Double) (d.child("latitude").getValue());
+						double lng = (Double) (d.child("longitude").getValue());
+						Location l = new Location("");
+						l.setLatitude(lat);
+						l.setLongitude(lng);
+						double bearing = currentLocation.bearingTo(l);
+						angles.add((int)bearing);
+					}
+				}
+				
 			});
 
 		}
