@@ -270,6 +270,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		
 		private TextView notification;
 		
+		private TextView hiding;
+		private TextView seeking;
+		
 		public NavigationFragment() {
 		}
 
@@ -281,6 +284,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			compass = (CompassView) rootView.findViewById(R.id.compassView1);
 			
 			notification = (TextView) rootView.findViewById(R.id.latestNotification);
+			
+			hiding = (TextView) rootView.findViewById(R.id.numHiders);
+			seeking = (TextView) rootView.findViewById(R.id.numSeekers);
 			
 			// GPS 
 			// Acquire a reference to the system Location Manager
@@ -391,6 +397,34 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				@Override
 				public void onCancelled(FirebaseError arg0) {
 					// Abort
+				}
+			});
+			
+			GameRef.child("numbers").child("hiding").addValueEventListener(new ValueEventListener() {
+				
+				@Override
+				public void onDataChange(DataSnapshot arg0) {
+					hiding.setText(arg0.getValue().toString());
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+			GameRef.child("numbers").child("seeking").addValueEventListener(new ValueEventListener() {
+				
+				@Override
+				public void onDataChange(DataSnapshot arg0) {
+					seeking.setText(arg0.getValue().toString());
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 			

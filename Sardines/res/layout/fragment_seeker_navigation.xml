@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF" >
+    android:background="#000000" >
 
     <TextView
         android:id="@+id/latestNotification"
@@ -44,7 +44,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/numHiders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/TextView7"
@@ -56,7 +56,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/numSeekers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView8"
@@ -100,6 +100,6 @@
         android:layout_height="280dip"
         android:layout_alignLeft="@+id/textView8"
         android:layout_below="@+id/textView3"
-        android:padding="10dip" />
+        android:padding="20dip" />
 
 </RelativeLayout> <!-- android:textAppearance="?android:attr/textAppearanceLarge" -->
