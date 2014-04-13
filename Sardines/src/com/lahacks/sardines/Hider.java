@@ -64,6 +64,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 	// game variables
 	static String gameCode;
 	static String pin;
+	
+	Location currentLocation = new Location("");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -249,8 +251,6 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			compass.setSeeking(false);
 
 			angles = new ArrayList<Integer>();
-			angles.add(0);
-			// angles.add(30);
 
 			compass.setSeekerAngles(angles);
 
@@ -265,9 +265,6 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 			return rootView;
 		}
-
-		double latitude;
-		double longitude;
 
 		@Override
 		public void onResume() {
@@ -288,6 +285,34 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				// Failure! No magnetometer.
 				Log.e(LOG_TAG, "No magnetomter found...");
 			}
+			
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			gameRef.child("players").addValueEventListener(new ValueEventListener(){
+
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onDataChange(DataSnapshot snap) {
+					angles.clear();
+					for(DataSnapshot d : snap.getChildren()){
+						double lat = Double.parseDouble((d.child("latitude").getValue()).toString());
+						double lng = Double.parseDouble((d.child("longitude").getValue()).toString());
+						Location l = new Location("");
+						l.setLatitude(lat);
+						l.setLongitude(lng);
+						Log.d(LOG_TAG, "SeekerLoc: Lat="+lat+" Lng="+lng);
+						double bearing = currentLocation.bearingTo(l);
+						angles.add((int)bearing);
+					}
+				}
+				
+			});
 
 		}
 
@@ -334,11 +359,12 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					mAzimuth = orientation[0];
 					mPitch = orientation[1];
 					mRoll = orientation[2];
-					// Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
 
 					ArrayList<Integer> rotated = new ArrayList<Integer>();
 					for (int a : angles) {
-						int r = (int) (a - (mAzimuth * (180.0 / Math.PI)));
+						Log.d(LOG_TAG, "a="+a);
+						int r = (int) (a - 90 - (mAzimuth * (180.0 / Math.PI)));
 						if (r < 0)
 							r += 360;
 						if (r >= 360)
@@ -379,17 +405,21 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			System.out.println("getting location...");
 			Log.v(LOG_TAG, "New Location: " + l); // TODO
 			System.out.println(l);
-			latitude = l.getLatitude();
-			longitude = l.getLongitude();
+			currentLocation = l;
 
+			updateHideoutLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
+			
+			/*
 			// update to database
 			Firebase database = new Firebase(
 					"https://intense-fire-7136.firebaseio.com/");
 			Firebase gameRef = database.child("GAME ID " + gameCode);
 			Firebase playerRef = gameRef.child("players").child(pin);
-			playerRef.child("latitude").setValue(latitude);
-			playerRef.child("longitude").setValue(longitude);
-
+			playerRef.child("latitude").setValue(currentLocation.getLatitude());
+			playerRef.child("longitude").setValue(currentLocation.getLongitude());
+*/
+			
+			/*
 			// update hideout part of database if this is the original hider
 			// NOM NOM NOM NOM NOM NOM NOM NOM NOM
 			playerRef.addValueEventListener(new ValueEventListener() {
@@ -414,31 +444,9 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				public void onCancelled(FirebaseError error) {
 					System.out.println("error: " + error);
 				}
-			});
+			});*/
 			
-			gameRef.child("players").addValueEventListener(new ValueEventListener(){
-
-				@Override
-				public void onCancelled(FirebaseError arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onDataChange(DataSnapshot snap) {
-					angles.clear();
-					for(DataSnapshot d : snap.getChildren()){
-						double lat = (Double) (d.child("latitude").getValue());
-						double lng = (Double) (d.child("longitude").getValue());
-						Location l = new Location("");
-						l.setLatitude(lat);
-						l.setLongitude(lng);
-						double bearing = currentLocation.bearingTo(l);
-						angles.add((int)bearing);
-					}
-				}
-				
-			});
+			
 
 		}
 

@@ -55,7 +55,7 @@ class CompassViewThread extends Thread {
 						if(randomFactor > maxRandomness) randomFactor = maxRandomness;
 						if(randomFactor < -1*maxRandomness) randomFactor = -1 * maxRandomness;
 						
-						double newAngle = compass.getTargetAngle() + randomFactor;
+						double newAngle = compass.getTargetAngle(); // + randomFactor;
 						
 						double diffAngle = newAngle - compass.getAngle();
 						while(diffAngle < -180) diffAngle += 360;

@@ -253,6 +253,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		SensorManager sensorManager;
 		
 		Location currentLocation = new Location("");
+		Location targetLocation = new Location("");
 		
 
 		private float[] mMagneticValues;
@@ -281,9 +282,6 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			
 			return rootView;
 		}
-		
-		double latitude;
-		double longitude;
 		
 		@Override
 		public void onResume(){
@@ -315,7 +313,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				@Override
 				public void onDataChange(DataSnapshot snap) {
 					//fuckery.
-					latitude = Double.parseDouble(snap.getValue().toString());
+					targetLocation.setLatitude(Double.parseDouble(snap.getValue().toString()));
 					updateHideLocation();
 				}
 				
@@ -329,7 +327,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				@Override
 				public void onDataChange(DataSnapshot snap) {
 					//more fuckery.
-					longitude = Double.parseDouble(snap.getValue().toString());
+					targetLocation.setLongitude(Double.parseDouble(snap.getValue().toString()));
 					updateHideLocation();
 				}
 				
@@ -344,8 +342,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		
 		@Override 
 		public void onPause(){
-			super.onPause();
-			locationManager.removeUpdates(locationListener);			
+			super.onPause();			
 			
 			
 		}
@@ -357,12 +354,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		}
 		
 		private void updateHideLocation(){
-			Location l = new Location("");
-			l.setLatitude(latitude);
-			l.setLongitude(longitude);
-			double angle = currentLocation.bearingTo(l);
-			double dist = currentLocation.distanceTo(l);
-			int deg = (int)(2000.0*(1.0/dist));
+			double angle = currentLocation.bearingTo(targetLocation);
+			double dist = currentLocation.distanceTo(targetLocation);
+			int deg = (int)(3000.0*(1.0/dist));
 			angle = (int) (angle - (mAzimuth*(180.0/Math.PI)));
 			if(deg < 20) deg = 20;
 			if(deg > 180) deg = 180;
@@ -409,6 +403,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 					mPitch = orientation[1];
 					mRoll = orientation[2];
 					//Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					updateHideLocation();
 				}
 			}
 
@@ -436,16 +431,16 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			System.out.println("getting location...");
 			Log.v(LOG_TAG, "New Location: " + l); // TODO
 			//System.out.println(l);
-			latitude = l.getLatitude();
-			longitude = l.getLongitude();
+			currentLocation.setLatitude(l.getLatitude());
+			currentLocation.setLongitude(l.getLongitude());
 
 			// update to database
 			Firebase database = new Firebase(
 					"https://intense-fire-7136.firebaseio.com/");
 			Firebase gameRef = database.child("GAME ID " + gameCode);
 			Firebase playerRef = gameRef.child("players").child(pin);
-			playerRef.child("latitude").setValue(latitude);
-			playerRef.child("longitude").setValue(longitude);
+			playerRef.child("latitude").setValue(currentLocation.getLatitude());
+			playerRef.child("longitude").setValue(currentLocation.getLongitude());
 		}
 	}
 	
