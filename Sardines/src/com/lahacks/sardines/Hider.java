@@ -481,40 +481,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			Firebase database = new Firebase(
 					"https://intense-fire-7136.firebaseio.com/");
 			GameRef = database.child("GAME ID " + gameCode);
-			GameRef.child("players").addChildEventListener(
-					new ChildEventListener() {
-
-						@Override
-						public void onChildRemoved(DataSnapshot arg0) {
-							Log.v(LOG_TAG, "CHILD removed");
-
-						}
-
-						@Override
-						public void onChildMoved(DataSnapshot arg0, String arg1) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void onChildChanged(DataSnapshot arg0,
-								String arg1) {
-							Log.v(LOG_TAG, "CHILD chnaged");
-
-						}
-
-						@Override
-						public void onChildAdded(DataSnapshot arg0, String arg1) {
-							Log.v(LOG_TAG, "CHILD added");
-
-						}
-
-						@Override
-						public void onCancelled(FirebaseError arg0) {
-							Log.v(LOG_TAG, "CHILD cancelled");
-
-						}
-					});
+			
 
 			playersList = (ListView) rootView
 					.findViewById(R.id.playersListView);
