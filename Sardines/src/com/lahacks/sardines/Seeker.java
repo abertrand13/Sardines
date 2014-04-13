@@ -2,6 +2,7 @@ package com.lahacks.sardines;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -35,6 +36,10 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 	private final static String LOG_TAG = "Seeker";
 	private static String gameCode;
+	private static String pin;
+	
+	ValueEventListener listener;
+	TextView latestNotification;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,9 +105,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		
 		//get the game code we're dealing with
 		Bundle extras = getIntent().getExtras();
-		if(extras != null) {
-			gameCode = (String)extras.get("gameCode");
-			System.out.println(gameCode);
+		if (extras != null) {
+			gameCode = (String) extras.get("gameCode");
+			pin = (String) extras.get("pin");
 		}
 		
 	}
@@ -341,7 +346,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		@Override 
 		public void onPause(){
 			super.onPause();
-			
+			locationManager.removeUpdates(locationListener);			
 			
 			
 		}
@@ -404,7 +409,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 					mAzimuth = orientation[0];
 					mPitch = orientation[1];
 					mRoll = orientation[2];
-					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					//Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
 				}
 			}
 
@@ -426,12 +431,22 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		    public void onProviderEnabled(String provider) {}
 
 		    public void onProviderDisabled(String provider) {}
-		  };
+		};
 		  
 		private void locationUpdate(Location l){
-			Log.d(LOG_TAG, "Location: Lat="+l.getLatitude()+" \tLng="+l.getLongitude());
-			currentLocation = l;
-			updateHideLocation();
+			System.out.println("getting location...");
+			Log.v(LOG_TAG, "New Location: " + l); // TODO
+			//System.out.println(l);
+			latitude = l.getLatitude();
+			longitude = l.getLongitude();
+
+			// update to database
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			Firebase playerRef = gameRef.child("players").child(pin);
+			playerRef.child("latitude").setValue(latitude);
+			playerRef.child("longitude").setValue(longitude);
 		}
 	}
 	
@@ -443,6 +458,47 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+			
+			// Access database and pull most recent notifications
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase GameRef = database.child("GAME ID " + gameCode);
+			ValueEventListener listener = GameRef.addValueEventListener(new ValueEventListener() {
+			    @Override
+			    public void onDataChange(DataSnapshot snapshot) {
+			    	
+			      DataSnapshot notifications = snapshot.child("Notifications");
+			      System.out.println("Notifications found");
+			      DataSnapshot newNotification = getMostRecent(notifications);
+			      System.out.println("Most recent found = " + newNotification.getValue());
+			      Object update = newNotification.getValue(); 
+			      System.out.println("Update = " + update);
+			   
+			      latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
+			      
+			      String s = update.toString();
+			      latestNotification.setText(s);
+			      
+			    }			    
+			    private DataSnapshot getMostRecent(DataSnapshot notifications) {
+			    	int smallestID = Integer.MAX_VALUE;
+			    	String name = "";
+			    	for(DataSnapshot child : notifications.getChildren()) {
+			    		if(Integer.parseInt(child.getName()) < smallestID) {
+			    			smallestID = Integer.parseInt(child.getName());
+			    			name = child.getName();
+			    		}
+			    	}			    	
+			    	return notifications.child(name);
+			    }
+
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					System.err.println("Listener was cancelled");
+					
+				}
+			});
+			
+			// Update view with notifications
 			View rootView = inflater.inflate(R.layout.fragment_seeker_stream,
 					container, false);
 			return rootView;

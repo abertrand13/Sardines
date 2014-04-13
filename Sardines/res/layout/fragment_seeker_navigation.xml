@@ -4,7 +4,7 @@
     android:background="#111111" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/latestNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
