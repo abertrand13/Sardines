@@ -37,7 +37,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 	private final static String LOG_TAG = "Seeker";
 	private static String gameCode;
 	private static String pin;
+	
 	ValueEventListener listener;
+	TextView latestNotification;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -471,7 +473,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			      Object update = newNotification.getValue(); 
 			      System.out.println("Update = " + update);
 			   
-			      TextView latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
+			      latestNotification = (TextView) getActivity().findViewById(R.id.latestNotification);
 			      
 			      String s = update.toString();
 			      latestNotification.setText(s);
