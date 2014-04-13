@@ -34,15 +34,13 @@ public class Splash extends Activity {
         startGameBtn.setEnabled(false);
         joinGameBtn.setEnabled(false);
         
-        et = (EditText) findViewById(R.id.nameEntry);
-        
         sharedPrefs = getSharedPreferences("splash", 0);
         if(sharedPrefs.contains("name")){
         	et.setText(sharedPrefs.getString("name", ""));
         }
         
         
-        et.addTextChangedListener(new TextWatcher() {
+        nameTxt.addTextChangedListener(new TextWatcher() {
         	 @Override
              public void afterTextChanged(Editable s) {
                  // TODO Auto-generated method stub
