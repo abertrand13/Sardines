@@ -31,12 +31,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.lahacks.sardines.Seeker.DummySectionFragment;
-import com.lahacks.sardines.Seeker.NavigationFragment;
 import com.lahacks.sardines.Seeker.StreamFragment;
+
+
 
 public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
+	static int gameCode = 0;
+	
 	public static final String LOG_TAG = "Hider";
 
 	/**
@@ -100,6 +107,10 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		Bundle extras = getIntent().getExtras();
+		if(extras != null)
+			gameCode = extras.getInt("gameCode");
 	}
 
 	@Override
@@ -357,6 +368,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 	public static class PlayersFragment extends Fragment {
 
 		ListView playersList;
+		
+		private final static String LOG_TAG = "PlayersFragment";
 
 		public PlayersFragment() {
 		}
@@ -366,6 +379,44 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_hider_players,
 					container, false);
+			
+			// Connect to firebase
+			//set up database reference
+			Firebase database = new Firebase("https://intense-fire-7136.firebaseio.com/");
+			Firebase GameRef = database.child("GAME ID " + gameCode);
+			GameRef.child("players").addChildEventListener(new ChildEventListener() {
+				
+				@Override
+				public void onChildRemoved(DataSnapshot arg0) {
+					Log.v(LOG_TAG, "CHILD removed");
+					
+				}
+				
+				@Override
+				public void onChildMoved(DataSnapshot arg0, String arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onChildChanged(DataSnapshot arg0, String arg1) {
+					Log.v(LOG_TAG, "CHILD chnaged");
+					
+				}
+				
+				@Override
+				public void onChildAdded(DataSnapshot arg0, String arg1) {
+					Log.v(LOG_TAG, "CHILD added");
+					
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					Log.v(LOG_TAG, "CHILD cancelled");
+					
+				}
+			});
+			
 			playersList = (ListView) rootView
 					.findViewById(R.id.playersListView);
 
