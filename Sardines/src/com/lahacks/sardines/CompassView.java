@@ -115,7 +115,7 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 		int r = Math.min(x, y);
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.argb(150, (int)((double)arcRange * (255.0/90.0)), 150, 150));
+		paint.setColor(Color.argb(255, (int)((double)arcRange * (255.0/180.0)), 196, 229));
 		int drawAngle = angle - (arcRange / 2);
 		if (drawAngle < 0)
 			drawAngle += 360;
@@ -128,7 +128,7 @@ public class CompassView extends SurfaceView implements SurfaceHolder.Callback {
 		int r = Math.min(x, y);
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.argb(150, 150, 150, 150));
+		paint.setColor(Color.argb(255, 53, 196, 229));
 		for(Integer ang : angles){
 			canvas.drawArc(new RectF(0,0,r,r), ang-10, 20, true, paint);
 		}

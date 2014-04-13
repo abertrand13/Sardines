@@ -349,9 +349,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			l.setLongitude(longitude);
 			double angle = currentLocation.bearingTo(l);
 			double dist = currentLocation.distanceTo(l);
-			int deg = (int)(3000.0*(1.0/dist));
+			int deg = (int)(2000.0*(1.0/dist));
 			angle = (int) (angle - (mAzimuth*(180.0/Math.PI)));
-			if(deg < 10) deg = 10;
+			if(deg < 20) deg = 20;
 			if(deg > 180) deg = 180;
 			Log.d(LOG_TAG, "TARGET] Angle: "+angle + " | Range: "+deg + " | Azimuth: "+ (mAzimuth*(180.0/Math.PI)));
 			
