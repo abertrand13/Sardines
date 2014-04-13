@@ -41,7 +41,7 @@ public class JoinGame extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_join_game);
 		// Show the Up button in the action bar.
-		setupActionBar();
+		//setupActionBar();
 
 		enterGameTxt = (EditText) findViewById(R.id.enterGameTxt);
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
