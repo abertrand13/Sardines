@@ -472,6 +472,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 
 		Firebase GameRef;
 		
+		ArrayList<String> idsList = new ArrayList<String>();
+		
 		public PlayersFragment() {
 		}
 
@@ -491,7 +493,7 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 			playersList = (ListView) rootView
 					.findViewById(R.id.playersListView);
 
-			String[] names = new String[] { "Player 1", "Player 2", "Player 3" };
+			String[] names = new String[] { "Loading..."};
 
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 					this.getActivity(),
@@ -509,8 +511,10 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					// TODO Auto-generated method stub
-
+					Log.d(LOG_TAG, "#"+arg3+" was clicked: "+idsList.get((int)arg3));
+					GameRef.child("players").child(idsList.get((int)arg3)).child("state").setValue("hiding");
+					playersList.getChildAt((int)arg3).setEnabled(false);
+					playersList.getChildAt((int)arg3).setClickable(false);
 				}
 			});
 
@@ -525,12 +529,18 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 				@Override
 				public void onDataChange(DataSnapshot arg0) {
 					ArrayList<String> names = new ArrayList<String>();
+					ArrayList<String> ids = new ArrayList<String>();
 					for(DataSnapshot ds : arg0.getChildren()){
 						String name = ds.child("name").getValue().toString();
-						if(!ds.child("id").getValue().equals(pin)) names.add(name);
+						String id = ds.child("id").getValue().toString();
+						if(!ds.child("id").getValue().equals(pin)){
+							names.add(name);
+							ids.add(id);
+						}
 					}
 					ArrayAdapter<String> adapt = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, names);
 					playersList.setAdapter(adapt);
+					idsList = ids;
 				}
 				
 				@Override

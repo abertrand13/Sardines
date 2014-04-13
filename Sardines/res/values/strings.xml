@@ -12,13 +12,13 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-   	<color name="grey">#B3B3B3</color>
+    <color name="grey">#B3B3B3</color>
 
     <string name="title_activity_hider">Hider</string>
     <string name="title_section3">Section 3</string>
-    
     <string name="title_section_navigation">Navigation</string>
     <string name="title_section_stream">Stream</string>
     <string name="title_section_players">Players</string>
+    <string name="title_activity_hiding_finish">Finish</string>
 
 </resources>

@@ -15,14 +15,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-       	android:theme="@style/AppTheme" >
-        
- 
-              
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.lahacks.sardines.Splash"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,8 +29,8 @@
         <activity
             android:name="com.lahacks.sardines.JoinGame"
             android:label="@string/title_activity_join_game"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.lahacks.sardines.Splash" >
+            android:parentActivityName="com.lahacks.sardines.Splash"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lahacks.sardines.Splash" />
@@ -41,8 +38,8 @@
         <activity
             android:name="com.lahacks.sardines.StartGame"
             android:label="@string/title_activity_start_game"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.lahacks.sardines.Splash" >
+            android:parentActivityName="com.lahacks.sardines.Splash"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lahacks.sardines.Splash" />
@@ -50,8 +47,8 @@
         <activity
             android:name="com.lahacks.sardines.Seeker"
             android:label="@string/title_activity_seeker"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.lahacks.sardines.Splash" >
+            android:parentActivityName="com.lahacks.sardines.Splash"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lahacks.sardines.Splash" />
@@ -59,8 +56,16 @@
         <activity
             android:name="com.lahacks.sardines.Hider"
             android:label="@string/title_activity_hider"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.lahacks.sardines.Splash">
+            android:parentActivityName="com.lahacks.sardines.Splash"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lahacks.sardines.Splash" />
+        </activity>
+        <activity
+            android:name="com.lahacks.sardines.HidingFinish"
+            android:label="@string/title_activity_hiding_finish"
+            android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lahacks.sardines.Splash" />

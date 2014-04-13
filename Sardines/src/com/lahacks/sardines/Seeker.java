@@ -7,6 +7,7 @@ import java.util.Map;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -108,6 +109,8 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 			gameCode = (String) extras.get("gameCode");
 			pin = (String) extras.get("pin");
 		}
+		
+		
 		
 	}
 	
@@ -334,6 +337,23 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 				@Override
 				public void onCancelled(FirebaseError error) {
 					System.out.println("error:" + error);
+				}
+			});
+			
+			GameRef.child("players").child(pin).child("state").addValueEventListener(new ValueEventListener() {
+				
+				@Override
+				public void onDataChange(DataSnapshot arg0) {
+					if(arg0.getValue().equals("hiding")){
+						Intent i = new Intent(getActivity(), HidingFinish.class);
+						startActivity(i);
+					}
+				}
+				
+				@Override
+				public void onCancelled(FirebaseError arg0) {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 			
