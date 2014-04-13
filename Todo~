@@ -5,6 +5,16 @@ Fix bug where you can double click and join twice
 Stream
 Deconstruct finished games (leave game for joined people, end game button for starter)
 Finding mechanism
+<<<<<<< HEAD
+(Q) app icon
+COMPLETE Disabled and enabled buttons
+COMPLETE (T) Ratio and randomness
+(Q) Background and colors
+=======
+Disabled and enabled buttons
+(T) Ratio and randomness
+>>>>>>> 558b561573f56a225564dd15a233261aad2d68ab
+
 
 (Picture messaging)
 
@@ -13,11 +23,3 @@ Firebase:
 	email: alex.bertrand13@gmail.compass
 	password: lahacks2014
 	
-Completed
---------------
-Disabled and enabled buttons
-(T) Ratio and randomness
-(Q) app icon
-(Q) Background and colors
-Disabled and enabled buttons
-(T) Ratio and randomness

@@ -15,6 +15,8 @@ class CompassViewThread extends Thread {
 	private double dpsRange = 8;
 	
 	private long lastTime = 0;
+	
+	private double randomFactor = 0;
 
 	public CompassViewThread(SurfaceHolder surfaceHolder, CompassView cv) {
 		_surfaceHolder = surfaceHolder;
@@ -43,11 +45,17 @@ class CompassViewThread extends Thread {
 						int elapsedTime = (int) (System.currentTimeMillis() - lastTime);
 						lastTime = System.currentTimeMillis();
 						
+						double newRange = compass.getTargetRange();
+						
 						double maxChangeAngle = ((double)elapsedTime / 1000.0) * dpsAngle;
 						double maxChangeRange = ((double)elapsedTime / 1000.0) * dpsRange;
 						
+						randomFactor += (Math.random() * 2.0) - (1.0);
+						double maxRandomness = (newRange/4);
+						if(randomFactor > maxRandomness) randomFactor = maxRandomness;
+						if(randomFactor < -1*maxRandomness) randomFactor = -1 * maxRandomness;
 						
-						double newAngle = compass.getTargetAngle();
+						double newAngle = compass.getTargetAngle() + randomFactor;
 						
 						double diffAngle = newAngle - compass.getAngle();
 						while(diffAngle < -180) diffAngle += 360;
@@ -60,7 +68,7 @@ class CompassViewThread extends Thread {
 								newAngle = compass.getAngle() - maxChangeAngle;
 						}
 						
-						double newRange = compass.getTargetRange();
+						
 						
 						if(Math.abs(newRange - compass.getRange()) > maxChangeRange){
 							if(newRange - compass.getRange() > 0)

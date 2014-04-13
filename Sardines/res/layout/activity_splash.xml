@@ -2,12 +2,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/white"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Splash" >
+
+    <Button
+        android:id="@+id/startGameBtn"
+        android:layout_width="150dp"
+        android:layout_height="65dp"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/custom_selector"
+        android:gravity="left|center_vertical"
+        android:padding="10dp"
+        android:text="Start a Game"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/nameEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="your name here"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey" >
+
+        <requestFocus />
+    </EditText>
 
     <ImageView
         android:id="@+id/imageView1"
@@ -15,7 +45,6 @@
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-10dp"
         android:src="@drawable/fishy" />
 
     <Button
@@ -24,37 +53,11 @@
         android:layout_height="65dp"
         android:layout_above="@+id/startGameBtn"
         android:layout_alignLeft="@+id/startGameBtn"
-        android:layout_marginBottom="19dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/custom_selector"
         android:gravity="left|center_vertical"
         android:padding="10dp"
-        android:text="Join a Game" />
-
-    <Button
-        android:id="@+id/startGameBtn"
-        android:layout_width="150dp"
-        android:layout_height="65dp"
-        android:layout_alignLeft="@+id/imageView1"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="19dp"
-        android:background="@drawable/custom_selector"
-        android:gravity="left|center_vertical"
-        android:padding="10dp"
-        android:text="Start a Game" />
-
-    <EditText
-        android:id="@+id/nameEntry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:ems="10"
-        android:hint="your name here"
-        android:inputType="textPersonName"
-        android:textColor="@color/white" >
-
-        <requestFocus />
-    </EditText>
+        android:text="Join a Game"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
