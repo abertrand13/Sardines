@@ -48,6 +48,8 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	
+	//static LocationManager locationManager;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -74,6 +76,9 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
+		//Set up location manager
+		//locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+		
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
@@ -343,7 +348,9 @@ public class Hider extends FragmentActivity implements ActionBar.TabListener {
 		};
 
 		private void locationUpdate(Location l) {
+			System.out.println("getting location...");
 			Log.v(LOG_TAG, "New Location: " + l); // TODO
+			System.out.println(l);
 		}
 	}
 
