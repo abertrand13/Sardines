@@ -1,18 +1,16 @@
 package com.lahacks.sardines;
 
-import android.widget.EditText;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-
-import android.text.TextWatcher;
-import android.text.Editable;
 
 public class Splash extends Activity {
 
@@ -20,6 +18,8 @@ public class Splash extends Activity {
 	Button startGameBtn;
 	Button joinGameBtn;
 	EditText et;
+	
+	SharedPreferences sharedPrefs;
 	
 	
     @Override
@@ -34,8 +34,15 @@ public class Splash extends Activity {
         startGameBtn.setEnabled(false);
         joinGameBtn.setEnabled(false);
         
-        et = (EditText) findViewById(R.id.nameEntry);
-        et.addTextChangedListener(new TextWatcher() {
+        sharedPrefs = getSharedPreferences("splash", 0);
+        if(sharedPrefs.contains("name")){
+        	nameTxt.setText(sharedPrefs.getString("name", ""));
+        	startGameBtn.setEnabled(true);
+        	joinGameBtn.setEnabled(true);
+        }
+        
+        
+        nameTxt.addTextChangedListener(new TextWatcher() {
         	 @Override
              public void afterTextChanged(Editable s) {
                  // TODO Auto-generated method stub
@@ -56,6 +63,8 @@ public class Splash extends Activity {
 	                 
 	                 startGameBtn.setEnabled(true);
 	                 joinGameBtn.setEnabled(true);
+	                 
+	                 sharedPrefs.edit().putString("name", s.toString()).apply();
             	 }
             	 else {
             		 startGameBtn = (Button) findViewById(R.id.startGameBtn);
