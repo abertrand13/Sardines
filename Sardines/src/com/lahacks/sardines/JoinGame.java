@@ -13,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
+import android.text.TextWatcher;
+import android.text.Editable;
 
 import com.firebase.client.*;
 
@@ -44,6 +46,32 @@ public class JoinGame extends Activity {
 		enterGameTxt = (EditText) findViewById(R.id.enterGameTxt);
 		enterGameBtn = (Button) findViewById(R.id.enterGameBtn);
 		Log.v(LOG_TAG, "setting things up.");
+		
+		enterGameBtn.setEnabled(false);
+		
+		enterGameTxt.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+           	 if (s.length() == 4) {
+	                enterGameBtn.setEnabled(true);
+           	 }
+           	 else {
+           		 enterGameBtn.setEnabled(false);
+           	 }
+            } 
+			
+		});
 		
 		//get name of player
 		playerName = "";
