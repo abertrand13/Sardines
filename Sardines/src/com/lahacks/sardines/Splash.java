@@ -1,5 +1,7 @@
 package com.lahacks.sardines;
 
+import android.widget.EditText;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +10,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import android.text.TextWatcher;
+import android.text.Editable;
+
 public class Splash extends Activity {
 
 	Button startGameBtn;
 	Button joinGameBtn;
+	EditText et;
+	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +27,35 @@ public class Splash extends Activity {
         
         startGameBtn = (Button) findViewById(R.id.startGameBtn);
         joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
+        
+        startGameBtn.setEnabled(false);
+        joinGameBtn.setEnabled(false);
+        
+        et = (EditText) findViewById(R.id.nameEntry);
+        et.addTextChangedListener(new TextWatcher() {
+        	 @Override
+             public void afterTextChanged(Editable s) {
+                 // TODO Auto-generated method stub
+
+             }
+
+             @Override
+             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                 // TODO Auto-generated method stub
+
+             }
+
+             @Override
+             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                 startGameBtn = (Button) findViewById(R.id.startGameBtn);
+                 joinGameBtn = (Button) findViewById(R.id.joinGameBtn);
+                 
+                 startGameBtn.setEnabled(true);
+                 joinGameBtn.setEnabled(true);
+
+             } 
+        });
         
         joinGameBtn.setOnClickListener(new OnClickListener() {
 			
