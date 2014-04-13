@@ -111,12 +111,14 @@ public class JoinGame extends Activity {
 				gameExists = data.hasChild("GAME ID " + inputCode);
 				if(gameExists) {
 					addPlayerToDatabase();
+					
 					startActivity(i);	
 				}
 				else
 				{
 					System.out.println("Game doesn't exist!");
 					//reset click listener
+					enterGameBtn.setOnClickListener(null);
 					enterGameBtn.setOnClickListener(new OnClickListener() {
 
 						@Override
@@ -141,6 +143,7 @@ public class JoinGame extends Activity {
 		database.removeEventListener(listener);
 		Firebase newPlayerRef = database.child("GAME ID " + inputCode).child("players").push();
 		newPlayerRef.child("id").setValue(newPlayerRef.getName());
+		i.putExtra("pin", newPlayerRef.getName());
 		newPlayerRef.child("name").setValue(playerName);
 		newPlayerRef.child("latitude").setValue(0);
 		newPlayerRef.child("longitude").setValue(0);

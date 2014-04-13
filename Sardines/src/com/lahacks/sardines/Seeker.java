@@ -2,6 +2,7 @@ package com.lahacks.sardines;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -35,6 +36,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 
 	private final static String LOG_TAG = "Seeker";
 	private static String gameCode;
+	private static String pin;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,9 +102,9 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		
 		//get the game code we're dealing with
 		Bundle extras = getIntent().getExtras();
-		if(extras != null) {
-			gameCode = (String)extras.get("gameCode");
-			System.out.println(gameCode);
+		if (extras != null) {
+			gameCode = (String) extras.get("gameCode");
+			pin = (String) extras.get("pin");
 		}
 		
 	}
@@ -398,7 +400,7 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 					mAzimuth = orientation[0];
 					mPitch = orientation[1];
 					mRoll = orientation[2];
-					Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
+					//Log.d(LOG_TAG, "Azimuth: " + (mAzimuth*(180.0/Math.PI)));
 				}
 			}
 
@@ -420,12 +422,22 @@ public class Seeker extends FragmentActivity implements ActionBar.TabListener{
 		    public void onProviderEnabled(String provider) {}
 
 		    public void onProviderDisabled(String provider) {}
-		  };
+		};
 		  
 		private void locationUpdate(Location l){
-			Log.d(LOG_TAG, "Location: Lat="+l.getLatitude()+" \tLng="+l.getLongitude());
-			currentLocation = l;
-			updateHideLocation();
+			System.out.println("getting location...");
+			Log.v(LOG_TAG, "New Location: " + l); // TODO
+			//System.out.println(l);
+			latitude = l.getLatitude();
+			longitude = l.getLongitude();
+
+			// update to database
+			Firebase database = new Firebase(
+					"https://intense-fire-7136.firebaseio.com/");
+			Firebase gameRef = database.child("GAME ID " + gameCode);
+			Firebase playerRef = gameRef.child("players").child(pin);
+			playerRef.child("latitude").setValue(latitude);
+			playerRef.child("longitude").setValue(longitude);
 		}
 	}
 	
