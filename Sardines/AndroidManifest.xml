@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="10"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -20,6 +20,7 @@
               
         <activity
             android:name="com.lahacks.sardines.Splash"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +31,7 @@
         <activity
             android:name="com.lahacks.sardines.JoinGame"
             android:label="@string/title_activity_join_game"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,6 +49,7 @@
         <activity
             android:name="com.lahacks.sardines.Seeker"
             android:label="@string/title_activity_seeker"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -55,6 +58,7 @@
         <activity
             android:name="com.lahacks.sardines.Hider"
             android:label="@string/title_activity_hider"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.lahacks.sardines.Splash" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
